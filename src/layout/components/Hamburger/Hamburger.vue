@@ -13,9 +13,7 @@ defineProps({
 })
 
 const emit = defineEmits(['toggleClick'])
-const toggleClick = () => {
-  emit('toggleClick')
-}
+const toggleClick = () => emit('toggleClick')
 </script>
 
 <style scoped lang="scss">

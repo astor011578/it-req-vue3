@@ -1,8 +1,8 @@
 <template>
   <div :class="classObj">
-    <!--left side-->
+    <!-- left sidebar -->
     <Sidebar v-if="settings.showLeftMenu" class="sidebar-container" />
-    <!--right container-->
+    <!-- right container -->
     <div class="main-container">
       <Navbar />
       <AppMain />
@@ -32,7 +32,7 @@ const classObj = computed(() => {
     hideSidebar: !settings.value.showLeftMenu
   }
 })
-//call ResizeHook() to listen page size that open or close
+//listening the window size to open or close the left sidebar
 ResizeHook()
 </script>
 <style lang="scss" scoped>

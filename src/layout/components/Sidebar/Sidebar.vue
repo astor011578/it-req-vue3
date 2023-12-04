@@ -2,7 +2,7 @@
   <div id="Sidebar" class="reset-menu-style">
     <!-- logo -->
     <Logo :collapse="!isCollapse" />
-    <!--router nav-->
+    <!-- router navbar -->
     <el-menu
       class="el-menu-vertical"
       :default-active="activeMenu"
@@ -27,15 +27,13 @@ import SidebarItem from './SidebarItem.vue'
 import { useAppStore } from '@/store/app'
 import { usePermissionStore } from '@/store/permission'
 const appStore = useAppStore()
-const settings = computed(() => { return appStore.settings })
-
 const permissionStore = usePermissionStore()
 const routes = computed(() => { return permissionStore.routes })
 const isCollapse = computed(() => { return appStore.sidebar.opened })
 const activeMenu = computed(() => {
   const route = useRoute()
   const { meta, path } = route
-  //if set path, the sidebar will highlight the path you set
+  //如果目前所處在的路由有在 sidebar 中, 則 highlight 此超連結
   if (meta.activeMenu) return meta.activeMenu
   return path
 })

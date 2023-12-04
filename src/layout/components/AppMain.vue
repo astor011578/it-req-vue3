@@ -1,16 +1,11 @@
 <template>
-  <div class="app-main" :class="{ 'show-tag-view': settings.showTagsView }">
+  <div class="app-main">
     <router-view v-slot="{ Component }">
-      <!-- has transition  Judging by settings.mainNeedAnimation -->
-      <transition v-if="settings.mainNeedAnimation" name="fade-transform" mode="out-in">
+      <transition name="fade-transform" mode="out-in">
         <keep-alive :include="cachedViews">
           <component :is="Component" :key="key" />
         </keep-alive>
       </transition>
-      <!-- no transition -->
-      <keep-alive v-else :include="cachedViews">
-        <component :is="Component" :key="key" />
-      </keep-alive>
     </router-view>
   </div>
 </template>
@@ -18,7 +13,6 @@
 <script setup>
 import { useAppStore } from '@/store/app'
 const route = useRoute()
-const settings = computed(() => { return appStore.settings })
 const key = computed(() => route.path)
 const cachedViews = computed(() => { return appStore.cachedViews })
 

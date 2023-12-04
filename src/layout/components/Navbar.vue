@@ -5,7 +5,6 @@
       <breadcrumb class="breadcrumb-container" />
     </div>
     <div class="right-menu">
-      <WILink />
       <LangSelect />
       <Avatar />
     </div>
@@ -17,20 +16,12 @@ import Breadcrumb from './Breadcrumb'
 import Hamburger from './Hamburger'
 import Avatar from './Avatar'
 import LangSelect from './LangSelect'
-import WILink from './WILink'
-
 import { useAppStore } from '@/store/app'
 const appStore = useAppStore()
-
-const settings = computed(() => {
-  return appStore.settings
-})
+const toggleSideBar = () => appStore.M_toggleSideBar()
 const opened = computed(() => {
   return appStore.sidebar.opened
 })
-const toggleSideBar = () => {
-  appStore.M_toggleSideBar()
-}
 </script>
 
 <style lang="scss" scoped>

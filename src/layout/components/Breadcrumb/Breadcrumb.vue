@@ -1,7 +1,6 @@
 <template>
   <el-breadcrumb class="app-breadcrumb" separator="/">
-    <!-- has transition, judging by settings.mainNeedAnimation -->
-    <transition-group v-if="settings.mainNeedAnimation" name="breadcrumb">
+    <transition-group name="breadcrumb">
       <el-breadcrumb-item v-for="(item, index) in levelList" :key="item.path">
         <span v-if="item.redirect === 'noRedirect' || index === levelList.length - 1" class="no-redirect">
           {{ lang(item.meta?.title) }}
@@ -9,32 +8,19 @@
         <a v-else @click.prevent="handleLink(item)">{{ lang(item.meta.title) }}</a>
       </el-breadcrumb-item>
     </transition-group>
-    <!-- no transition -->
-    <template v-else>
-      <el-breadcrumb-item v-for="(item, index) in levelList" :key="item.path">
-        <span v-if="item.redirect === 'noRedirect' || index === levelList.length - 1" class="no-redirect">
-          {{ lang(item.meta?.title) }}
-        </span>
-        <a v-else @click.prevent="handleLink(item)">{{ lang(item.meta.title) }}</a>
-      </el-breadcrumb-item>
-    </template>
   </el-breadcrumb>
 </template>
 
 <script setup>
 import { compile } from 'path-to-regexp'
-import { useAppStore } from '@/store/app'
 import { lang } from '@/hooks/useCommon'
 
-//whether close the animation fo breadcrumb
-const appStore = useAppStore()
-const settings = computed(() => { return appStore.settings })
 const levelList = ref(null)
 const route = useRoute()
 
 const getBreadcrumb = () => {
   //only show routes with meta.title
-  let matched = route.matched.filter((item) => item.meta && item.meta.title)
+  let matched = route.matched.filter(item => item.meta && item.meta.title)
   const first = matched[0]
   //it can replace the first page if not exits
   if (!isHome(first)) matched = [{ path: '/tables', meta: { title: 'Home' } }].concat(matched)

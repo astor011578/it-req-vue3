@@ -127,8 +127,7 @@ const showPwd = () => {
 }
 </script>
 <style lang="scss" scoped>
-$bg: rgb(34, 193, 195);
-$bg-gradient: linear-gradient(180deg, rgba(34, 193, 195, 1) 0%, rgba(1, 87, 155, 1) 100%);
+$bg-gradient: linear-gradient(180deg, rgb(237, 235, 253) 0%, rgb(209, 209, 239) 100%);
 $title: #616161;
 $error: var(--error);
 $gray: #757575;
@@ -141,7 +140,6 @@ $lightgray: #e0e0e0;
   width: 100%;
 
   background: {
-    color: $bg;
     image: $bg-gradient;
   }
 
@@ -194,11 +192,12 @@ $lightgray: #e0e0e0;
       left: 50%;
       z-index: 0;
       transform: translateY(-110%) translateX(-50%);
-      width: 185px;
+      width: 90px;
       height: 90px;
 
       background: {
-        image: url('@/icons/logo/logo-lg.png');
+        image: url('@/icons/logo/logo.png');
+        size: 90px 90px;
         repeat: no-repeat;
       }
     }
@@ -206,9 +205,10 @@ $lightgray: #e0e0e0;
 
   .login-form {
     width: 340px;
+    margin-top: 10px;
     padding: 40px 30px;
     background: #fff;
-    box-shadow: 0px 4px 16px rgba(158, 105, 25, 0.15);
+    box-shadow: 0px 4px 16px rgba(25, 105, 105, 0.15);
     border-radius: 8px;
     position: relative;
     z-index: 10;

@@ -1,54 +1,52 @@
 const setting = {
+  /**
+   * @description the title of website
+   */
   title: 'IT Request System',
 
   //* layout-related *//
   /**
+   * @description whether show the left-sidebar
    * @type { boolean } true | false
-   * @description whether show the settings left-panel
    */
   showLeftMenu: true,
+  /**
+   * @description 
+   * @type { number }
+   */
+  triggerResizeWidth: 992,
   
   //* animation-related *//
   /**
-   * @type { boolean } true | false
-   * @description whether need animation of main area
-   */
-  mainNeedAnimation: true,
-  /**
-   * @type { boolean } true | false
-   * @description whether need nprogress
+   * @description whether need to use NProgress
+   * @type { boolean } true || false
    */
   isNeedNprogress: true,
 
   //* login and permission related *//
   /**
-   * @type { boolean } true | false
    * @description open permissions that TEST-IT could edit ALL STEPS in his/her own request
+   * @type { boolean } true || false
    */
   highPermission: true,
   /**
-   * @type { string } 'zh' | 'en'
    * @description the default language setting for i18n
+   * @type { string } 'zh' || 'en'
    */
   defaultLanguage: 'en',
 
   //* Others *//
   /**
-   * @type { boolean } true | false
-   * @description whether  open prod mock
+   * @description whether need to open prod mock
+   * @type { boolean } true || false
    */
   openProdMock: false,
   /**
-   * @type { string | array } 'dev' | ['prod','test','dev'] according to the .env file props of VITE_APP_ENV
-   * @description Need show err logs component.
-   * The default is only used in the production env
+   * @description whether need to show error-logs component
    * If you want to also use it in dev, you can pass ['dev', 'test']
+   * @type { string | string[] } 'dev' || ['prod', 'test', 'dev'] according to the .env file props of VITE_APP_ENV
    */
   errorLog: ['prod', 'test'],
-  /**
-   * table height (100vh-delWindowHeight)
-   */
-  delWindowHeight: '210px',
   /**
    * vite.config.js base config
    * such as './'

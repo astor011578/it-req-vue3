@@ -40,10 +40,9 @@ watch(expandRef, (value) => {
 
 const state = reactive({
   title: setting.title,
-  logo: '@/icons/logo/logo-sm.png'
+  logo: '@/icons/logo/logo.png'
 })
 
-// export to page for
 const { title, logo } = toRefs(state)
 </script>
 
@@ -82,7 +81,7 @@ const { title, logo } = toRefs(state)
       height: 56px;
 
       background: {
-        image: url('@/icons/logo/logo-sm.png');
+        image: url('@/icons/logo/logo.png');
         repeat: no-repeat;
         size: 32px;
         position: center;

@@ -31,7 +31,7 @@ import { lang } from '@/hooks/useCommon'
  * show userID in tooltip of avatar
  */
 const greeting = ref('Hi!')
-if (localStorage.user) greeting.value = 'Hi! ' + localStorage.user
+if (localStorage.userId) greeting.value = `Hi! ${localStorage.userId}`
 
 /**
  * logout
@@ -52,6 +52,7 @@ const isHovered = ref(false)
 const mouseover = () => isHovered.value = true
 const mouseleave = () => isHovered.value = false
 </script>
+
 <style lang="scss">
 .avatar-wrapper {
   margin-top: 5px;

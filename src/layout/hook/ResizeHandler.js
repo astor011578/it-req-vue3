@@ -1,6 +1,8 @@
-const { body } = document
-const WIDTH = 992
 import { useAppStore } from '@/store/app'
+import settings from '@/settings'
+const { body } = document
+const WIDTH = settings.triggerResizeWidth
+
 export default function () {
   const appStore = useAppStore()
   const $_isMobile = () => {

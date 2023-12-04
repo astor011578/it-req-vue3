@@ -95,6 +95,7 @@ const inputListener = async (value) => {
   await setValidateString()
 }
 </script>
+
 <style scoped lang="scss">
 #saving-time {
   list-style: none;

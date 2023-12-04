@@ -165,7 +165,7 @@ export const useITReqStore = defineStore('ITRequest', {
               //for debugging
               // console.log(res.data)
               const {
-                ITno, reqName, type, status, buyoffStatus, benefit, benefitType, mgr, reqr, reqrID, pg, pgID, issueDate, approveDate, approveComments,
+                ITno, reqName, type, status, buyoffStatus, benefit, benefitType, reqr, reqrID, pg, pgID, issueDate, approveDate, approveComments,
                 reviewDuration, turnOn, plant, stage, customer, device, tester, equipment, system, purpose, attachFiles, remark, leadTime, isUploaded
               } = res.data
               const { qualityIssue, offlineAct, onlineAct, testerAct, offlineExp, onlineExp, testerExp } = benefit
@@ -177,7 +177,7 @@ export const useITReqStore = defineStore('ITRequest', {
               //get values of isUploaded
               this.isUploaded = isUploaded
               //get values in basicInfo
-              this.basicInfo = { ITno, reqName, type, status, leadTime, pg, reqr, mgr, issueDate, remark, approveDate, approveComments, reviewDuration }
+              this.basicInfo = { ITno, reqName, type, status, leadTime, pg, reqr, issueDate, remark, approveDate, approveComments, reviewDuration }
               //get values in benefit
               if (hasProperty(benefit)) {
                 this.benefit = {

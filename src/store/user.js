@@ -58,7 +58,6 @@ export const useUserStore = defineStore('user', {
         authReq()
           .then((response) => {
             const { data } = response
-            console.log(data)
             //沒有 token
             if (!data) return reject('Verification failed, please LOGIN again')
             const { exp, iat, iss, userId, roles } = data

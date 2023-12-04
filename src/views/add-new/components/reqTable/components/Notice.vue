@@ -18,6 +18,7 @@
     </template>
   </el-alert>
 </template>
+
 <script setup>
 import { lang } from '@/hooks/useCommon'
 </script>

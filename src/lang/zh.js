@@ -193,7 +193,7 @@ export default {
     'Must select which issue will be improved': '必須選擇一項品質改善事件',
     'Define core team member': '填寫人員資訊',
     'Requester name': '需求者名字',
-    'Test-IT name': 'Test-IT 名字',
+    'IT name': 'IT 名字',
     'Benefit of this IT-Request': '填寫改善效益',
     'Definition of benefit': '改善效益的定義',
     'Saving the': '可以節省',

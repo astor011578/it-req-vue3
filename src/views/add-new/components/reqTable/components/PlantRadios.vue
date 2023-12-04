@@ -3,9 +3,9 @@
     <el-row class="form-row-width">
       <el-col :span="12">
         <el-radio-group v-model="plant">
-          <el-radio label="T1" size="small" class="pl-2">T1</el-radio>
-          <el-radio label="T3" size="small">T3</el-radio>
-          <el-radio label="T6" size="small">T6</el-radio>
+          <el-radio label="P1" size="small" class="pl-2">P1</el-radio>
+          <el-radio label="P2" size="small">P2</el-radio>
+          <el-radio label="P3" size="small">P3</el-radio>
         </el-radio-group>
       </el-col>
       <el-col :span="12">

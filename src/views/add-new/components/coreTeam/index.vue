@@ -10,8 +10,8 @@
           </el-col>
         </el-row>
       </el-form-item>
-      <!-- Test-IT name -->
-      <el-form-item :label="lang('Test-IT name')">
+      <!-- IT name -->
+      <el-form-item :label="lang('IT name')">
         <el-row class="form-row-width">
           <el-col :span="12">
             <ProgrammerName />

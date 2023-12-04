@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ElMessage } from 'element-plus'
 import { lang } from '@/hooks/useCommon'
+import { getInfoReq, getUsersReq } from '@/api/user'
 import axiosReq from '@/utils/axiosReq'
 import Application from './state/Application'
 import Validate from './state/ValidateString'
@@ -29,14 +30,12 @@ export const useNewStore = defineStore('addNew', {
   actions: {
     //* setters
     setRequester(requesterInfo) {
-      const { name, id, mgr, mgrId } = requesterInfo
+      const { name, id } = requesterInfo
       this.application.coreTeam.reqr = [name, id]
-      this.application.coreTeam.reqrMgr = [mgr, mgrId]
     },
     setProgrammer(programmerInfo) {
-      const { name, id, mgr, mgrId } = programmerInfo
+      const { name, id } = programmerInfo
       this.application.coreTeam.pg = [name, id]
-      this.application.coreTeam.pgMgr = [mgr, mgrId]
     },
     setBenefitType(benefitType) {
       this.application.benefit.type = benefitType
@@ -87,17 +86,16 @@ export const useNewStore = defineStore('addNew', {
     },
 
     //* api callers
-    async fetchUsers(onlyIT) {
+    async fetchUsers(dept) {
       try {
-        const res = await axiosReq({ method: 'get', url: `/users/${onlyIT}`, isParams: true })
+        const res = await getUsersReq(dept)
         if (res?.code === 200) {
           const userList = []
           for await (const user of res.data) {
+            const { userId, nameEn, email, dept, roles, isResigned, createdAt } = user
             userList.push({
-              name: user.userName,
-              id: user.userID,
-              mgr: user.managerName,
-              mgrId: user.managerID
+              name: nameEn,
+              id: userId
             })
           }
           return userList
@@ -109,16 +107,14 @@ export const useNewStore = defineStore('addNew', {
         console.error(error)
       }
     },
-    async fetchUserInfo($userID) {
+    async fetchUserInfo($userId) {
       try {
-        const res = await axiosReq({ method: 'get', url: `/user/${$userID}`, isParams: true })
+        const res = await getInfoReq($userId)
         if (res?.code === 200) {
-          const { userName, userID, managerName, managerID } = res.data
+          const { userId, nameEn, email, dept, roles, isResigned, createdAt } = res.data
           const userInfo = {
-            name: userName,
-            id: userID,
-            mgr: managerName,
-            mgrId: managerID
+            name: nameEn,
+            id: userId
           }
           return userInfo
         } else {
@@ -210,19 +206,15 @@ export const useNewStore = defineStore('addNew', {
       })
         .then(res => {
           if (res.code === 200) {
-            const { reqr, reqrID, mgr, mgrID, pg, pgID, pgMgr, pgMgrID, benefitType, benefit } = res.data
+            const { reqr, reqrID, pg, pgID, benefitType, benefit } = res.data
             const requesterInfo = {
               name: reqr,
-              id: reqrID,
-              mgr: mgr,
-              mgrId: mgrID
+              id: reqrID
             }
             this.setRequester(requesterInfo)
             const programmerInfo = {
               name: pg,
-              id: pgID,
-              mgr: pgMgr,
-              mgrId: pgMgrID
+              id: pgID
             }
             this.setProgrammer(programmerInfo)
             this.setBenefitType(benefitType)

@@ -25,6 +25,7 @@ onMounted(async () => {
   setTimeout(() => loading.value = false, 1500)
 })
 </script>
+
 <style lang="scss">
 $input-w-relative: 100%;
 $input-w-absolute: 300px;

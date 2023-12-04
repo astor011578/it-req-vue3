@@ -32,7 +32,6 @@ const iterateValidates = async () => {
   for await (const [outerKey, outerVal] of Object.entries(validates)) {
     for await (const [innerKey, innerVal] of Object.entries(outerVal)) {
       const benefitType = addNewStore.getBenefitType
-      const requestType = addNewStore.getRequestType
       isPass = innerVal !== '' ? false : true
       if (innerVal !== '') {
         switch (innerKey) {
@@ -67,16 +66,10 @@ const iterateValidates = async () => {
           }
           case 'turnOn':
           case 'UAT1':
-          case 'UAT2': {
-            break
-          }
+          case 'UAT2': 
           case 'release':
           case 'monitor': {
-            if (requestType === 'OneTime') {
-              break
-            } else {
-              break
-            }
+            break
           }
           default: {
             break

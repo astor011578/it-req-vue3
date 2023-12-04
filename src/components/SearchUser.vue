@@ -43,7 +43,7 @@
       </el-table>
       <!-- Submit button -->
       <div class="ce-dialog-footer-btn">
-        <el-button type="primary" @click="submitReqr">{{ lang('Submit') }}</el-button>
+        <el-button type="primary" @click="submitPgr">{{ lang('Submit') }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -54,7 +54,7 @@ import { ElMessage } from 'element-plus'
 import { lang } from '@/hooks/useCommon'
 import { Search, Loading } from '@/icons/common/'
 import { useNewStore } from '@/store/addNew'
-const props = defineProps({ onlyProgrammers: { type: Boolean } })
+const props = defineProps({ dept: { type: String } })
 const emits = defineEmits([ 'get-user-info' ])
 const dialogState = ref(false)  //綁定 dialog 是否開啟
 const tableRef = ref(null)      //綁定 el-table
@@ -118,16 +118,16 @@ const selectHandler = (selection) => {
 onMounted(() => {
   loading.value = true
   setTimeout(async () => {
-    resource.value = await useNewStore().fetchUsers(props.onlyProgrammers)
+    resource.value = await useNewStore().fetchUsers(props.dept)
     resource.value = resource.value.filter((user) => { return user.name })
     filteredData.value = resource.value
   }, 1500)
   loading.value = false
 })
 
-//按下送出按鈕後關閉 modal, 並 store requester 的資訊
-const submitReqr = async () => {
-  const isEmpty = Object.keys(selected.value).length === 0    //是否沒有選擇任何一個 requester
+//按下送出按鈕後關閉 modal, 並 store programmer 的資訊
+const submitPgr = async () => {
+  const isEmpty = Object.keys(selected.value).length === 0    //是否沒有選擇任何一個 programmer
   if (isEmpty) {
     ElMessage.error(lang('Please select user'))
   } else {

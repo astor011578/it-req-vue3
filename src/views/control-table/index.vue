@@ -69,7 +69,7 @@
           </template>
         </vxe-column>
         <vxe-colgroup :title="`${lang('Postponement')} (times)`">
-          <vxe-column field="postponeIT" title="Test-IT" width="79" sortable />
+          <vxe-column field="postponeIT" title="IT" width="79" sortable />
           <vxe-column field="postponeReqr" :title="lang('Requester')" width="99" sortable />
         </vxe-colgroup>
         <vxe-column field="type" :title="lang('Type')" width="85" sortable :filters="typeList" :filter-method="filterHandler">
@@ -98,14 +98,13 @@
           :filters="plantList"
           :filter-method="filterHandler"
         />
-        <vxe-column field="reqrMgr" :title="lang('Manager')" min-width="100" sortable />
         <vxe-column field="reqr" :title="lang('Requester')" min-width="100" sortable>
           <template #default="{ row }">{{ row.reqr }}</template>
         </vxe-column>
         <vxe-column
           v-if="ITList.length"
           field="IT"
-          title="Test-IT"
+          title="IT"
           width="100"
           sortable
           :filters="ITList"
@@ -132,6 +131,7 @@
 import XEUtils from 'xe-utils'
 import { lang } from '@/hooks/useCommon'
 import { SelectStatus, SearchBar, ExportXlsx } from './components'
+import { getUsersReq } from '@/api/user'
 const tableRef = ref(null)          //綁定 vxe-table 的 ref
 const resource = ref([])            //從服務端請求過來的 raw data
 const resultData = ref([])          //經過 filter / keyword-searching 過濾後的 data
@@ -143,7 +143,7 @@ const sorting = reactive({ field: 'ITno', order: 'desc' })   //綁定排序的�
 
 //渲染表頭用
 const _schedule = [
-  { title: 'Test-IT buyoff (UAT1)', prefix: 'UAT1' },
+  { title: 'IT buyoff (UAT1)', prefix: 'UAT1' },
   { title: 'User buyoff (UAT2)', prefix: 'UAT2' },
   { title: 'Release', prefix: 'release' },
   { title: 'Monitor 1 lot', prefix: 'monitor' }
@@ -193,16 +193,18 @@ const benefitTypeList = [
   { label: 'Undefined', value: undefined }
 ]
 const plantList = [
-  { label: 'T1', value: 'T1' },
-  { label: 'T3', value: 'T3' },
-  { label: 'T6', value: 'T6' }
+  { label: 'P1', value: 'P1' },
+  { label: 'P2', value: 'P2' },
+  { label: 'P3', value: 'P3' }
 ]
-const ITList = [
-  { label: 'Brother Lu', value: 'Brother Lu' },
-  { label: 'Pierce Chen', value: 'Pierce Chen' },
-  { label: 'Fred Yeh', value: 'Fred Yeh' },
-  { label: 'Other', value: 'Other' }
-]
+// const ITList = [
+//   { label: 'Brother Lu', value: 'Brother Lu' },
+//   { label: 'Pierce Chen', value: 'Pierce Chen' },
+//   { label: 'Fred Yeh', value: 'Fred Yeh' },
+//   { label: 'Other', value: 'Other' }
+// ]
+
+let ITList = ref([])
 
 //vxe-table filter 監聽器
 const filterListener = () => {
@@ -212,9 +214,7 @@ const filterListener = () => {
 
 //vxe-table filter 處理器
 const filterHandler = ({ value, row, column }) => {
-  if (value !== 'Other') return row[column.field] === value
-  const notInOther = ['Brother Lu', 'Pierce Chen', 'Fred Yeh']
-  return !notInOther.includes(row[column.field])
+  return row[column.field] === value
 }
 
 //向服務端請求獲取資料 (每次選單選項有改變, 就會送ㄧ次請求)
@@ -246,7 +246,21 @@ const selectPageReq = () => {
 //get selected option from children component (SelectStatus.vue)
 const getSelected = (_option) => switchTable.value = _option
 //onMounted 時, 向服務端請求取得資料
-onMounted(() => selectPageReq())
+onMounted(async () => {
+  selectPageReq()
+  await getUsersReq('IT')
+    .then((res) => {
+      const { data } = res
+      ITList.value = []
+      if (data && data.length) {
+        const ITs = data.map(IT => {
+          const { nameEn } = IT
+          return { label: nameEn, value: nameEn }
+        })
+        ITList.value = ITs
+      }
+    })
+})
 //listen to switchTable
 watch(switchTable, () => selectPageReq())
 

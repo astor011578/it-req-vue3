@@ -5,9 +5,7 @@ class Application {
   constructor() {
     this.coreTeam = {
       reqr: ['', ''],
-      reqrMgr: ['', ''],
-      pg: ['', ''],
-      pgMgr: ['', '']
+      pg: ['', '']
     }
     this.benefit = {
       type: 'Efficiency',

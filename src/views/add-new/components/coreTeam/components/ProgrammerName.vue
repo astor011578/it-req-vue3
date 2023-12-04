@@ -3,7 +3,7 @@
     <!-- 顯示 Programmer name 框 -->
     <el-input v-model="programmerName" disabled />
     <!-- 選擇 Programmer button 與搜尋對話框 -->
-    <SearchUser :only-programmers="true" @get-user-info="getProgrammer" />
+    <SearchUser :dept="'IT'" @get-user-info="getProgrammer" />
   </span>
 </template>
 

@@ -26,10 +26,18 @@ export const logoutReq = () => {
   })
 }
 
-export const getInfoReq = (userID) => {
+export const getInfoReq = (userId) => {
   return request({
     method: 'get',
-    url: `/user/${userID}`
+    url: `/user/${userId}`
+  })
+}
+
+export const getUsersReq = (dept) => {
+  const url = dept ? `/users?dept=${dept}` : '/users'
+  return request({
+    method: 'get',
+    url
   })
 }
 

@@ -23,11 +23,6 @@ const setting = {
   //* login and permission related *//
   /**
    * @type { boolean } true | false
-   * @description whether need login
-   */
-  isNeedLogin: true,
-  /**
-   * @type { boolean } true | false
    * @description open permissions that TEST-IT could edit ALL STEPS in his/her own request
    */
   highPermission: true,
@@ -38,10 +33,6 @@ const setting = {
   defaultLanguage: 'en',
 
   //* Others *//
-  /**
-   * @type { string } 'roles' | 'code'
-   */
-  permissionMode: 'roles',
   /**
    * @type { boolean } true | false
    * @description whether  open prod mock
@@ -58,10 +49,6 @@ const setting = {
    * table height (100vh-delWindowHeight)
    */
   delWindowHeight: '210px',
-  /**
-   * setting dev token when  isNeedLogin is setting false
-   */
-  tmpToken: 'tmp_token',
   /**
    * vite.config.js base config
    * such as './'

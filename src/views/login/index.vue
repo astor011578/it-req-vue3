@@ -86,8 +86,9 @@ watch(
 const loading = ref(false)
 const tipMessage = ref('')
 const loginHandler = async () => {
-  const hasUserId = loginForm.userId.trim().length ? true : false
-  const hasPassword = loginForm.password.trim().length ? true : false
+  const { userId, password } = loginForm
+  const hasUserId = userId.trim().length ? true : false
+  const hasPassword = password.trim().length ? true : false
   switch (true) {
     case !hasUserId: return tipMessage.value = 'Please input user ID'
     case !hasPassword: return tipMessage.value = 'Please input password'

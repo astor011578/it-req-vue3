@@ -72,6 +72,7 @@ export const useAppStore = defineStore('app', {
     },
 
     M_language(language) {
+      console.log(language)
       const { locale } = i18n.global
       this.language = language
       locale.value = language

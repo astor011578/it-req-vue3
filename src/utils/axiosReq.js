@@ -51,7 +51,6 @@ service.interceptors.request.use(
  */
 service.interceptors.response.use(
   (response) => {
-    console.log(response)
     //如果請求時有開啟 loading 效果, 返回回應後要關閉
     if (reqConfig.afHLoading && loadingInstance) loadingInstance.close()
 
@@ -59,17 +58,18 @@ service.interceptors.response.use(
     if (reqConfig.isDownLoadFile) return response
 
     const statusCode = response.status
-    const { message, status, authorization } = response.data
+    const { message, status, authorization, data } = response.data
 
-    const data = {
+    const resData = {
       message,
       status,
       code: statusCode
     }
 
-    if (authorization) data.authorization = authorization
+    if (authorization) resData.authorization = authorization
+    if (data) resData.data = data
 
-    return data
+    return resData
   },
   (err) => {
     //關閉 loading 動畫

@@ -126,7 +126,7 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
-  //如果是 'manager', 'admin', 'test-it' 才會顯示
+  //如果具有 'Review request' 權限才會顯示
   {
     path: '/review',
     component: Layout,
@@ -135,7 +135,7 @@ export const asyncRoutes = [
     meta: {
       title: 'Review application',
       icon: 'fa-solid fa-file-pen',
-      roles: ['admin', 'manager', 'test-it']
+      roles: ['Review request']
     },
     children: [
       {
@@ -144,7 +144,7 @@ export const asyncRoutes = [
         name: 'Review',
         hidden: true,
         meta: {
-          roles: ['admin', 'manager', 'test-it']
+          roles: ['Review request']
         }
       },
       {
@@ -154,14 +154,14 @@ export const asyncRoutes = [
         hidden: true,
         meta: {
           title: 'Review new request',
-          roles: ['admin', 'manager', 'test-it']
+          roles: ['Review request']
         }
       }
     ]
   },
   //404 page must be placed at the end !!!
   //using pathMatch install of "*" in vue-router 4.0
-  //未經授權 (roles.includes('test-it') === false 會重導至 /401)
+  //未經授權 (roles.includes('Review request') === false 會重導至 /401)
   { path: '/:pathMatch(.*)', redirect: '/401', hidden: true }
 ]
 

@@ -14,18 +14,16 @@ const resetRouter = () => {
 export const useUserStore = defineStore('user', {
   state: () => {
     return {
-      username: '',
+      userId: '',
       roles: [],
-      userInfo: {},
-      isRegistered: false
+      userInfo: {}
     }
   },
 
   actions: {
-    M_username(username) { this.$patch((state) => state.username = username) },
-    M_roles(roles) { this.$patch((state) => state.roles = roles) },
-    M_isRegistered(isRegistered) { this.$patch((state) => state.isRegistered = isRegistered === 0 ? false : true) },
-
+    setUserId(userId) { this.$patch((state) => state.userId = userId) },
+    setRoles(roles) { this.$patch((state) => state.roles = roles) },
+    
     /**
      * login
      */
@@ -52,7 +50,7 @@ export const useUserStore = defineStore('user', {
       })
     },
     /**
-     * get user authentication
+     * get user authorization
      */
     getAuth() {
       return new Promise((resolve, reject) => {
@@ -60,28 +58,22 @@ export const useUserStore = defineStore('user', {
         authReq()
           .then((response) => {
             const { data } = response
-            // console.log(data)
+            console.log(data)
             //沒有 token
-            if (!data) return reject('Verification failed, please LOGIN again.')
-            const rolesArr = localStorage.getItem('roles')
-            const { exp, roles, username, isAdmin, isRegistered } = data
+            if (!data) return reject('Verification failed, please LOGIN again')
+            const { exp, iat, iss, userId, roles } = data
 
-            if (rolesArr) {
-              //if there's roles in localStorage
-              data.roles = JSON.parse(rolesArr)
-            } else {
-              //if there's no roles in localStorage
-              localStorage.setItem('roles', JSON.stringify(roles))
+            if (roles && roles.length) {
               localStorage.setItem('exp', exp)
-              localStorage.setItem('user', username)
-              localStorage.setItem('registered', isRegistered === 0 ? false : true)
+              localStorage.setItem('userId', userId)
+            } else {
+              return reject('Verification failed, please LOGIN again')
             }
-            this.M_username(username)
-            this.M_roles(roles)
-            this.M_isRegistered(isRegistered)
+            this.setUserId(userId)
+            this.setRoles(roles)
             resolve(data)
           })
-          .catch((error) => {
+          .catch(error => {
             reject(error)
           })
       })
@@ -102,16 +94,17 @@ export const useUserStore = defineStore('user', {
      */
     resetState() {
       return new Promise((resolve) => {
-        this.M_username('')
-        this.M_roles([])
-        this.M_isRegistered(0)
+        this.setUserId('')
+        this.setRoles([])
         //must remove token first
         removeToken()
         //then remove all items except "language" in localStorage
-        localStorage.removeItem('Authorization')
+        const language = localStorage.getItem('language')
+        localStorage.clear()
+        localStorage.setItem('language', language)
         resetRouter()
         const permissionStore = usePermissionStore()
-        permissionStore.M_hasUserInfo(false)
+        permissionStore.setHasUserInfo(false)
         resolve(null)
       })
     },

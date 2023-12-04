@@ -1,4 +1,4 @@
-const key = 'Authorization'
+const key = 'authorization'
 
 export function getToken() {
   return localStorage.getItem(key)

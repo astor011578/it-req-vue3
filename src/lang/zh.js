@@ -126,11 +126,13 @@ const general = {
   'Purpose': '需求目的',
   'Plant': '廠區',
   'Attached files': '參考附件',
-  'Last review date': '最後簽閱日期',
+  'Approve date': '審核通過日期',
   'Issue date': '填單日期',
   'Requester': '需求者',
-  'Lead time': '經過時間',
+  'Lead time': '經過天數',
+  'Lead time (day)': '經過天數',
   'Review duration': '審核天數',
+  'Review duration (day)': '審核天數',
   'Status': '狀態',
   'Remark': '備註',
   'Type': '類型',
@@ -184,7 +186,7 @@ export default {
   tables: {
     'Switch status': '切換顯示表格',
     'Search': '搜尋',
-    'Postponement': '延期次數',
+    'Rescheduling (times)': '延期次數',
     ...general
   },
   addNew: {

@@ -35,26 +35,26 @@ const redCells = ref([])  //二維陣列
 const cols = ref([
   //cols 裡的每個 item 皆為一維陣列
   [
-    'IT #', 'Request name', 'Status', 'Last review date', 'Review duration (day)', 'Lead time (day)',
-    'Postponement (times)', '',
+    'IT #', 'Request name', 'Status', 'Approve date', 'Review duration (day)', 'Lead time (day)',
+    'Rescheduling (times)', '',
     'Type', 'Benefit',
-    'Tester saving time (hr / day)', '',
-    'Online staff saving time (hr / day)', '',
-    'Offline staff saving time (hr / day)', '',
-    'Plant', 'Manager', 'Requester', 'Test-IT', 'Issue date', 'Turn on',
-    'Test-IT buyoff (UAT1)', '',
+    'Save tester time (hr / day)', '',
+    'Save online staff time (hr / day)', '',
+    'Save offline staff time (hr / day)', '',
+    'Plant', 'Requester', 'IT', 'Issue date', 'Turn on',
+    'IT buyoff (UAT1)', '',
     'User buyoff (UAT2)', '',
     'Release', '',
     'Monitor 1 lot', ''
   ],
   [
     '', '', '', '', '', '',
-    'Test-IT', 'Requester',
+    'IT', 'Requester',
     '', '',
     'Expect', 'Actual',
     'Expect', 'Actual',
     'Expect', 'Actual',
-    '', '', '', '', '', '',
+    '', '', '', '', '',
     'Expect', 'Actual',
     'Expect', 'Actual',
     'Expect', 'Actual',
@@ -74,18 +74,18 @@ const transferData = async ($resource) => {
 
   $resource.forEach(doc => {
     let {
-      ITno, reqName, buyoffStatus, approveDate, reviewDuration, leadTime, postponeIT, postponeReqr, type,
-      benefitType, testerSavingsExp, testerSavingsAct, onlineSavingsExp, onlineSavingsAct, 
-      offlineSavingsExp, offlineSavingsAct, plant, reqrMgr, reqr, IT, issueDate, turnOnDate,
+      reqNo, reqName, buyoffStatus, approveDate, reviewDuration, leadTime, rescheduleIT, rescheduleReqr, type,
+      benefitType, testerSavingExp, testerSavingAct, onlineSavingExp, onlineSavingAct, 
+      offlineSavingExp, offlineSavingAct, plant, reqr, pgr, issueDate, turnOnDate,
       UAT1Exp, UAT1Act, UAT2Exp, UAT2Act, releaseExp, releaseAct, monitorExp, monitorAct
     } = doc
     leadTime = leadTime < 0 ? 'NA' : leadTime
     type = type ? type : 'NA'
 
     data.push([
-      ITno, reqName, buyoffStatus, approveDate, reviewDuration, leadTime, postponeIT, postponeReqr, type,
-      benefitType, testerSavingsExp, testerSavingsAct, onlineSavingsExp, onlineSavingsAct,
-      offlineSavingsExp, offlineSavingsAct, plant, reqrMgr, reqr, IT, issueDate, turnOnDate,
+      reqNo, reqName, buyoffStatus, approveDate, reviewDuration, leadTime, rescheduleIT, rescheduleReqr, type,
+      benefitType, testerSavingExp, testerSavingAct, onlineSavingExp, onlineSavingAct,
+      offlineSavingExp, offlineSavingAct, plant, reqr, pgr, issueDate, turnOnDate,
       UAT1Exp, UAT1Act, UAT2Exp, UAT2Act, releaseExp, releaseAct, monitorExp, monitorAct
     ])
   })
@@ -107,10 +107,10 @@ const getRedCells = async ($resource) => {
     let redInOneRaw = []
     if (value.status === 'Proceeding') {
       switch (true) {
-        case value.UAT1IsDue: redInOneRaw.push(2, 3, 23); break;
-        case value.UAT2IsDue: redInOneRaw.push(2, 3, 25); break;
-        case value.releaseIsDue: redInOneRaw.push(2, 3, 27); break;
-        case value.monitorIsDue: redInOneRaw.push(2, 3, 29); break;
+        case value.UAT1IsDue: redInOneRaw.push(2, 3, 22); break;
+        case value.UAT2IsDue: redInOneRaw.push(2, 3, 24); break;
+        case value.releaseIsDue: redInOneRaw.push(2, 3, 26); break;
+        case value.monitorIsDue: redInOneRaw.push(2, 3, 28); break;
       }
     }
     redCells.push(redInOneRaw)
@@ -145,7 +145,7 @@ const drawTable = async ($wb, $sheetname, $columns, $rawData, $data) => {
   const headerRows = $columns.length      //表頭有幾行
 
   //樣式相關
-  const widths = ['', 11, 51, 17, 13, 15, 12, 11, 11, 10, 10, 14, 14, 16, 16, 16, 16, 8, 15, 15, 15, 12, 9, 10, 10, 10, 10, 9, 9, 9, 9]
+  const widths = ['', 11, 51, 17, 13, 15, 12, 11, 11, 10, 10, 14, 14, 16, 16, 16, 16, 8, 15, 15, 12, 9, 10, 10, 10, 10, 9, 9, 9, 9]
   const headerFont = { bold: true, size: 10, name: 'Arial' }
   const headerFill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFF00' } }
   const bodyFont = { size: 10, name: 'Arial' }
@@ -171,8 +171,8 @@ const drawTable = async ($wb, $sheetname, $columns, $rawData, $data) => {
   }
 
   //處理合併儲存格
-  const rowSpans = ['A', 'B', 'C', 'D', 'E', 'F', 'I', 'J', 'Q', 'R', 'S', 'T', 'U', 'V'].map((item) => { return `${item}1:${item}2` })
-  const colSpans = ['G1:H1', 'K1:L1', 'M1:N1', 'O1:P1', 'W1:X1', 'Y1:Z1', 'AA1:AB1', 'AC1:AD1']
+  const rowSpans = ['A', 'B', 'C', 'D', 'E', 'F', 'I', 'J', 'Q', 'R', 'S', 'T', 'U'].map((item) => { return `${item}1:${item}2` })
+  const colSpans = ['G1:H1', 'K1:L1', 'M1:N1', 'O1:P1', 'V1:W1', 'X1:Y1', 'Z1:AA1', 'AB1:AC1']
   const mergeCells = rowSpans.concat(colSpans)
   mergeCells.forEach((mergeCell) => ws.mergeCells(mergeCell))
 

@@ -31,9 +31,9 @@
         :sort-config="{ defaultSort: sorting }"
         @filter-change="filterListener"
       >
-        <vxe-column field="ITno" title="IT #" width="76" sortable fixed="left">
+        <vxe-column field="reqNo" title="IT #" width="76" sortable fixed="left">
           <template #default="{ row }">
-            <a class="ce-link" :href="`#/detail/${row.ITno}`" target="_blank">{{ row.ITno }}</a>
+            <a class="ce-link" :href="`#/detail/${row.reqNo}`" target="_blank">{{ row.reqNo }}</a>
           </template>
         </vxe-column>
         <vxe-column
@@ -55,22 +55,22 @@
             </span>
           </template>
         </vxe-column>
-        <vxe-column field="approveDate" :title="lang('Last review date')" width="99" sortable>
+        <vxe-column field="approveDate" :title="lang('Approve date')" width="115" sortable>
           <template #default="{ row }">
             <span v-if="row.approveDate === ''" class="ce-gray-color-italic">N/A</span>
             <span v-else>{{ row.approveDate }}</span>
           </template>
         </vxe-column>
-        <vxe-column field="reviewDuration" :title="`${lang('Review duration')} (day)`" width="110" sortable />
-        <vxe-column field="leadTime" :title="`${lang('Lead time')} (day)`" width="110" sortable>
+        <vxe-column field="reviewDuration" :title="`${lang('Review duration (day)')}`" width="100" sortable />
+        <vxe-column field="leadTime" :title="`${lang('Lead time (day)')}`" width="110" sortable>
           <template #default="{ row }">
             <span v-if="row.leadTime < 0" class="ce-gray-color-italic">N/A</span>
             <span v-else>{{ row.leadTime }}</span>
           </template>
         </vxe-column>
-        <vxe-colgroup :title="`${lang('Postponement')} (times)`">
-          <vxe-column field="postponeIT" title="IT" width="79" sortable />
-          <vxe-column field="postponeReqr" :title="lang('Requester')" width="99" sortable />
+        <vxe-colgroup :title="`${lang('Rescheduling (times)')}`">
+          <vxe-column field="rescheduleIT" title="IT" width="79" sortable />
+          <vxe-column field="rescheduleReqr" :title="lang('Requester')" width="99" sortable />
         </vxe-colgroup>
         <vxe-column field="type" :title="lang('Type')" width="85" sortable :filters="typeList" :filter-method="filterHandler">
           <template #default="{ row }">
@@ -103,7 +103,7 @@
         </vxe-column>
         <vxe-column
           v-if="ITList.length"
-          field="IT"
+          field="pgr"
           title="IT"
           width="100"
           sortable
@@ -132,6 +132,7 @@ import XEUtils from 'xe-utils'
 import { lang } from '@/hooks/useCommon'
 import { SelectStatus, SearchBar, ExportXlsx } from './components'
 import { getUsersReq } from '@/api/user'
+import { getRequests } from '@/api/IT-request'
 const tableRef = ref(null)          //綁定 vxe-table 的 ref
 const resource = ref([])            //從服務端請求過來的 raw data
 const resultData = ref([])          //經過 filter / keyword-searching 過濾後的 data
@@ -139,7 +140,7 @@ const loading = ref(false)          //是否要開啟 loading 效果 (ps. 搜尋
 const isReset = ref(false)          //判斷搜尋欄是否需要重置
 const totalPage = ref(0)            //資料總筆數
 const switchTable = ref('Weekly')   //綁定選單組件選中的值, 預設選項為 'Weekly'
-const sorting = reactive({ field: 'ITno', order: 'desc' })   //綁定排序的值, 預設排序為 ITno 降序
+const sorting = reactive({ field: 'reqNo', order: 'desc' })   //綁定排序的值, 預設排序為 reqNo 降序
 
 //渲染表頭用
 const _schedule = [
@@ -149,9 +150,9 @@ const _schedule = [
   { title: 'Monitor 1 lot', prefix: 'monitor' }
 ]
 const _benefits = [
-  { title: 'tester', prefix: 'testerSavings' },
-  { title: 'online staff', prefix: 'onlineSavings' },
-  { title: 'offline staff', prefix: 'offlineSavings' }
+  { title: 'tester', prefix: 'testerSaving' },
+  { title: 'online staff', prefix: 'onlineSaving' },
+  { title: 'offline staff', prefix: 'offlineSaving' }
 ]
 
 /**
@@ -197,13 +198,6 @@ const plantList = [
   { label: 'P2', value: 'P2' },
   { label: 'P3', value: 'P3' }
 ]
-// const ITList = [
-//   { label: 'Brother Lu', value: 'Brother Lu' },
-//   { label: 'Pierce Chen', value: 'Pierce Chen' },
-//   { label: 'Fred Yeh', value: 'Fred Yeh' },
-//   { label: 'Other', value: 'Other' }
-// ]
-
 let ITList = ref([])
 
 //vxe-table filter 監聽器
@@ -223,23 +217,20 @@ const selectPageReq = () => {
   loading.value = true
 
   setTimeout(() => {
-    axiosReq({
-      url: `/requests/${switchTable.value}`,
-      method: 'get',
-      isParams: true
-    }).then((res) => {
-      resource.value = res.data
-      resultData.value = res.data
-      totalPage.value = res?.total
+    getRequests(switchTable.value)
+      .then(res => {
+        resource.value = res.data
+        resultData.value = res.data
+        totalPage.value = res?.data.length
 
-      //每次送出請求就重置篩選與搜尋欄的設置
-      if (tableRef.value) {
-        tableRef.value.reloadData(resource.value)
-        tableRef.value.sort('ITno', 'desc')
-      }
-      isReset.value = false
-      loading.value = false
-    })
+        //每次送出請求就重置篩選與搜尋欄的設置
+        if (tableRef.value) {
+          tableRef.value.reloadData(resource.value)
+          tableRef.value.sort('reqNo', 'desc')
+        }
+        isReset.value = false
+        loading.value = false
+      })
   }, 1000)
 }
 
@@ -284,6 +275,7 @@ const getSearchWords = (_searchInfo) => {
   totalPage.value = resultData.value.length
 }
 </script>
+
 <style lang="scss" scoped>
 $outer-space: calc(var(--navbar-height) + 1rem * 2 + 24.38px + 24px * 2 + 1px * 2 + 14px);
 

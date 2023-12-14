@@ -21,25 +21,30 @@ export const dateGenerator = () => {
  * @returns { string }
  */
 export const dateFormatter = (dateVal) => {
+  let before
   switch (typeof dateVal) {
     case 'object': {
-      if (dateVal !== null) {
-        let yyyy = dateVal.getFullYear()
-        let mm = dateVal.getMonth() + 1
-        let dd = dateVal.getDate()
-
-        return [yyyy, mm < 10 ? '0' + mm : mm, dd < 10 ? '0' + dd : dd].join('/')
-      } else {
-        return ''
-      }
+      before = dateVal ? dateVal : ''
+      break
     }
     case 'string': {
-      return dateVal !== '' ? dateVal : ''
+      before = dateVal !== '' ? new Date(dateVal) : ''
+      break
     }
     default: {
       return ''
     }
   }
+
+  let yyyy = before.getFullYear()
+  let mm = before.getMonth() + 1
+  let dd = before.getDate()
+
+  return [
+    yyyy,
+    mm < 10 ? '0' + mm : mm,
+    dd < 10 ? '0' + dd : dd
+  ].join('/')
 }
 
 /**

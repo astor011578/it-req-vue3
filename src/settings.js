@@ -25,11 +25,6 @@ const setting = {
 
   //* login and permission related *//
   /**
-   * @description open permissions that TEST-IT could edit ALL STEPS in his/her own request
-   * @type { boolean } true || false
-   */
-  highPermission: true,
-  /**
    * @description the default language setting for i18n
    * @type { string } 'zh' || 'en'
    */

@@ -19,11 +19,11 @@
 
 <script setup>
 import { FullLoading } from '@/components'
-import { useITReqStore } from '@/store/ITRequest'
+import { useITReqStore } from '@/store/IT-request'
 import { useRoute } from 'vue-router'
 import { TopButtons, BasicInfo, Benefit, Scope, Schedule, Evidence, Cancellation } from './components'
 
-const ITNo = useRoute().params.ITno
+const reqNo = useRoute().params.reqNo
 const store = useITReqStore()
 const status = ref('')
 const reviewingStatuses = ['Reviewing', 'Rejected', 'Returned']
@@ -33,14 +33,15 @@ const collapseKeys = ref(['1', '2', '3', '4', '5', '6'])
 
 onMounted(async () => {
   loading.value = true
-  //儲存此需求的 IT no.
-  store.setITNo(ITNo)
+  //儲存此需求的 reqNo
+  store.setReqNo(reqNo)
   //向服務端請求此需求的資訊
-  await store.getITRequestInfo()
+  await store.getITReqInfo()
   status.value = store.getReqStatus
   setTimeout(() => loading.value = false, 1500)
 })
 </script>
+
 <style scoped lang="scss">
 $border-color: #e4e7ed;
 $collapse-title-color: var(--cyan-darken-3);

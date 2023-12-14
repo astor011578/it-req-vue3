@@ -61,7 +61,7 @@ export const constantRoutes = [
         meta: { title: 'Control table', icon: 'fa-solid fa-table' }
       },
       {
-        path: 'detail/:ITno',
+        path: 'detail/:reqNo',
         name: 'Details',
         hidden: true,
         component: () => import('@/views/detail/index.vue'),
@@ -82,7 +82,7 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/edit/:ITno',
+    path: '/edit/:reqNo',
     component: Layout,
     children: [
       {
@@ -148,7 +148,7 @@ export const asyncRoutes = [
         }
       },
       {
-        path: 'new/:ITno',
+        path: 'new/:reqNo',
         component: reviewNew,
         name: 'ReviewNew',
         hidden: true,

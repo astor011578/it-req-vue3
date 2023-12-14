@@ -14,13 +14,13 @@
         column="1"
         border
       >
-        <template #title>
+        <template #title v-if="val.uploadFiles.length">
           <div>
             <font-awesome-icon icon="fa-solid fa-paperclip" />
             {{ val.title }}
           </div>
         </template>
-        <el-descriptions-item :label="lang('Status')">
+        <el-descriptions-item v-if="val.uploadFiles.length" :label="lang('Status')">
           <el-tag v-if="val.state === 'Approved'" type="primary">
             {{ lang('Approved') }}
           </el-tag>
@@ -28,35 +28,38 @@
             {{ lang(val.state) }}
           </span>
         </el-descriptions-item>
-        <el-descriptions-item v-if="val.upload_reply[1] === 'Reject'" :label="lang('Rejection message')" >
-          <span v-if="val.upload_reply[2] === ''" class="ce-gray-color-italic">
+        <el-descriptions-item v-if="val.uploadReply === 'Rejected'" :label="lang('Rejection message')" >
+          <span v-if="!val.uploadReply" class="ce-gray-color-italic">
             {{ lang('There is no comments') }}
           </span>
           <span v-else>
-            {{ val.upload_reply[2] }}
+            {{ val.uploadReply }}
           </span>
         </el-descriptions-item>
-        <el-descriptions-item v-if="val.upload_files.length" :label="lang('Last update date')">
-          {{ val.upload_date }}
+        <el-descriptions-item v-if="val.uploadFiles.length" :label="lang('Last review date')">
+          {{ dateFormatter(val.reviewDate) }}
         </el-descriptions-item>
-        <el-descriptions-item v-if="val.upload_files.length" :label="lang('Evidence')">
+        <el-descriptions-item v-if="val.uploadFiles.length" :label="lang('Last update date')">
+          {{ dateFormatter(val.updateDate) }}
+        </el-descriptions-item>
+        <el-descriptions-item v-if="val.uploadFiles.length" :label="lang('Evidence')">
           <div
-            v-for="(valInFiles, idxInFiles) in val.upload_files"
+            v-for="(valInFiles, idxInFiles) in val.uploadFiles"
             :key="idxInFiles"
             class="evidence-container"
           >
             <a
               class="ce-link"
-              :href="`${prePath}/${key}/${valInFiles.filename}`"
-              :download="valInFiles.originalname"
+              :href="`${prePath}/${key}/${valInFiles.fileName}`"
+              :download="valInFiles.originalName"
               target="_blank"
             >
               <div>
                 <File class="mr-1" />
-                {{ valInFiles.originalname }}
+                {{ valInFiles.originalName }}
               </div>
               <div v-if="imgExt.indexOf(valInFiles.ext.toLowerCase()) !== -1">
-                <img :src="`${prePath}/${key}/${valInFiles.filename}`" />
+                <img :src="`${prePath}/${key}/${valInFiles.fileName}`" />
               </div>
             </a>
           </div>
@@ -67,46 +70,50 @@
 </template>
 
 <script setup>
+import { dateFormatter } from '@/hooks/useDate'
 import { lang } from '@/hooks/useCommon'
 import { hasProperty } from '@/hooks/useValidate'
-import { useITReqStore } from '@/store/ITRequest'
+import { useITReqStore } from '@/store/IT-request'
 import { File } from '@/icons/common/'
 const store = useITReqStore()
-const ITno = store.getITNo
+const reqNo = store.getReqNo
 const evidence = ref({})
-const prePath = `${import.meta.env.VITE_APP_BASE_URL}/files/${ITno}`
+const prePath = `${import.meta.env.VITE_APP_BASE_URL}/uploads/${reqNo}`
 const imgExt = ['jpg', 'jpeg', 'gif', 'png', 'svg']
 
 onMounted(() => {
   const _evidence = store.getEvidence
+  evidence.value = Object.assign({}, _evidence)
   for (const [key, val] of Object.entries(_evidence)) {
-    if (key === 'release' || key === 'monitor') if (!_evidence[key]) break
-    evidence.value[key] = val
+    const { uploadFiles, uploadReply } = val
+    if (key === 'release' || key === 'monitor') {
+      if (!uploadFiles.length) break
+    }
     //get file extension
-    if (val.upload_files.length) {
-      evidence.value[key].upload_files.forEach((file, index) => {
-        let extension = file.originalname.split('.').slice(-1)[0]
-        evidence.value[key].upload_files[index].ext = extension
+    if (uploadFiles.length) {
+      uploadFiles.forEach((file, index) => {
+        let extension = file.originalName.split('.').slice(-1)[0]
+        evidence.value[key].uploadFiles[index].ext = extension
       })
     }
 
     //get state value
-    if (!val.upload_reply.length) {
+    if (!uploadReply) {
       evidence.value[key].state = 'Not uploaded yet'
       evidence.value[key].class = 'ce-gray-color-italic'
     } else {
-      switch (val.upload_reply[1]) {
-        case 'Pending': {
+      switch (uploadReply) {
+        case 'Reviewing': {
           evidence.value[key].state = 'Pending approval'
           evidence.value[key].class = 'ce-gray-color-italic'
           break
         }
-        case 'Reject': {
+        case 'Rejected': {
           evidence.value[key].state = 'Rejected, re-uploading'
           evidence.value[key].class = 'ce-gray-color-italic'
           break
         }
-        case 'Approve': {
+        case 'Approved': {
           evidence.value[key].state = 'Approved'
           break
         }
@@ -115,7 +122,7 @@ onMounted(() => {
 
     //get title value
     switch (key) {
-      case 'UAT1': evidence.value[key].title = 'Test-IT buyoff (UAT1)'; break;
+      case 'UAT1': evidence.value[key].title = 'IT buyoff (UAT1)'; break;
       case 'UAT2': evidence.value[key].title = 'User buyoff (UAT2)'; break;
       case 'release': evidence.value[key].title = 'Release'; break;
       case 'monitor': evidence.value[key].title = 'Monitor 1 lot'; break;
@@ -123,6 +130,7 @@ onMounted(() => {
   }
 })
 </script>
+
 <style lang="scss" scoped>
 $subtitle-color: var(--cyan-darken-4);
 

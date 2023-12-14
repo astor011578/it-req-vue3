@@ -90,7 +90,7 @@
 <script setup>
 import { ElMessage } from 'element-plus'
 import { UploadFiles } from '@/components'
-import { useITReqStore } from '@/store/ITRequest'
+import { useITReqStore } from '@/store/IT-request'
 import { hasProperty } from '@/hooks/useValidate'
 import { dateGenerator } from '@/hooks/useDate'
 import { lang } from '@/hooks/useCommon'
@@ -105,7 +105,7 @@ const size = 'large'
 const plain = false
 const router = useRouter()
 const permission = ref(false)
-const ITno = useRoute().params.ITno
+const reqNo = useRoute().params.reqNo
 const step = ref('')
 const reqType = shallowRef('')
 const benefitType = shallowRef('')
@@ -120,9 +120,9 @@ const showBenefitDialog = ref(false)  //是否顯示更新 actual benefit 的 di
 //取得子組件傳回的上傳證明資訊 (UploadFiles.vue)
 const getUploads = async (uploads) => {
   if (uploads.length) {
-    let upload_files = []
+    let uploadFiles = []
     uploads.forEach((upload) => {
-      upload_files.push({
+      uploadFiles.push({
         path: upload.path,
         filename: upload.filename,
         originalname: upload.originalname
@@ -132,8 +132,8 @@ const getUploads = async (uploads) => {
     let today = dateGenerator()
     uploadedEvidence.value = {
       step: step.value,
-      upload_date: today,
-      upload_files: upload_files
+      updateDate: today,
+      uploadFiles: uploadFiles
     }
     if (aboutToClose.value && benefitType.value !== '') {
       showBenefitDialog.value = true
@@ -147,7 +147,7 @@ const getUploads = async (uploads) => {
 const submitEvidence = async (requestData) => {
   axiosReq({
     method: 'patch',
-    url: `/evidence/${ITno}`,
+    url: `/evidence/${reqNo}`,
     data: requestData
   })
     .then(() => {
@@ -172,7 +172,7 @@ const submitBenefit = async () => {
 
   await axiosReq({
     method: 'patch',
-    url: `/benefit?no=${ITno}`,
+    url: `/benefit?no=${reqNo}`,
     data: actualBenefit.value
   })
     .then(() => ElMessage.success(lang('Update the actual benefit successfully')))
@@ -191,6 +191,8 @@ watch(store, async (val) => {
   permission.value = await store.value.getPermission.evidence
   const _benefit = await store.value.getBenefit
   step.value = await store.value.getSimpleStep
+
+  console.log(permission.value)
 
   if (hasProperty(_benefit)) {
     const { offlineExp, onlineExp, testerExp, offlineAct, onlineAct, testerAct } = _benefit
@@ -218,6 +220,7 @@ watch(store, async (val) => {
   }
 })
 </script>
+
 <style lang="scss">
 #benefit-table {
   .el-input {

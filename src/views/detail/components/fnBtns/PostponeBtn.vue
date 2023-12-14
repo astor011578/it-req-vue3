@@ -41,7 +41,7 @@
 </template>
 <script setup>
 import { ElMessage } from 'element-plus'
-import { useITReqStore } from '@/store/ITRequest'
+import { useITReqStore } from '@/store/IT-request'
 import { hasProperty, validateDate } from '@/hooks/useValidate'
 import { dateFormatter } from '@/hooks/useDate'
 import { lang } from '@/hooks/useCommon'

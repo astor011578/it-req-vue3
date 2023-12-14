@@ -43,8 +43,8 @@ const keyword = ref('')
  * @description fields that will be filtered
  */
 const searchFields = ref([
-  'ITno', 'reqName', 'type', 'plant',
-  'reqrMgr', 'reqr', 'pg', 'benefitType',
+  'reqNo', 'reqName', 'type', 'plant',
+  'reqr', 'pgr', 'benefitType', 'approveDate',
   'issueDate', 'status', 'buyoffStatus', 'turnOn',
   'UAT1Exp', 'UAT1Act', 'UAT2Exp', 'UAT2Act',
   'releaseExp', 'releaseAct', 'monitorExp', 'monitorAct'
@@ -63,6 +63,7 @@ const searchHandler = (value) => {
 //watch the change of props, and reset keyword value
 watch(props, () => { if (props.isReset) keyword.value = '' })
 </script>
+
 <style lang="scss" scoped>
 $search-bar-w: 240px;
 $search-bar-h: 24px;

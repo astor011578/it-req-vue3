@@ -20,6 +20,12 @@ export const useUserStore = defineStore('user', {
     }
   },
 
+  getters: {
+    getUserId: (state) => { return state.userId },
+    getRoles: (state) => { return state.roles },
+    getUserInfo: (state) => { return state.userInfo }
+  },
+
   actions: {
     setUserId(userId) { this.$patch((state) => state.userId = userId) },
     setRoles(roles) { this.$patch((state) => state.roles = roles) },

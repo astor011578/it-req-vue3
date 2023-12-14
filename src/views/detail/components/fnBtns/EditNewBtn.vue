@@ -20,7 +20,7 @@
 
 <script setup>
 import { lang } from '@/hooks/useCommon'
-import { useITReqStore } from '@/store/ITRequest'
+import { useITReqStore } from '@/store/IT-request'
 const props = defineProps({
   icon: { type: Object, required: true },
   tip: { type: String, required: true }

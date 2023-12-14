@@ -43,7 +43,7 @@
 </template>
 <script setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { useITReqStore } from '@/store/ITRequest'
+import { useITReqStore } from '@/store/IT-request'
 import { hasProperty } from '@/hooks/useValidate'
 import { dateGenerator } from '@/hooks/useDate'
 import { lang } from '@/hooks/useCommon'

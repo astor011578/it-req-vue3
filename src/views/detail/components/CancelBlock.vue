@@ -9,12 +9,13 @@
     </template>
     <div>
       <el-descriptions column="2" border>
-        <el-descriptions-item :label="lang('Application date')">{{ cancellation.apply_date }}</el-descriptions-item>
+        <el-descriptions-item :label="lang('Application date')">{{ dateFormatter(cancellation.applyDate) }}</el-descriptions-item>
+        <el-descriptions-item :label="lang('Applicant')">{{ cancellation.applicantName }}</el-descriptions-item>
+        <el-descriptions-item :label="lang('Reason')">{{ cancellation.reason }}</el-descriptions-item>
         <el-descriptions-item :label="lang('Status')">
           <el-tag :type="tagTypes[cancellation.result]">{{ lang(cancellation.result) }}</el-tag>
         </el-descriptions-item>
-        <el-descriptions-item :label="lang('Applicant')">{{ cancellation.applicant[0] }}</el-descriptions-item>
-        <el-descriptions-item :label="lang('Reason')">{{ cancellation.reason }}</el-descriptions-item>
+        <el-descriptions-item :label="lang('Review date')">{{ dateFormatter(cancellation.reviewDate) }}</el-descriptions-item>
         <el-descriptions-item v-if="cancellation.result === 'Rejected'" :label="lang('Rejection message')">
           <span v-if="cancellation.comments === ''" class="ce-gray-color-italic">
             {{ lang('There is no comments') }}
@@ -29,21 +30,18 @@
 </template>
 
 <script setup>
-import { useITReqStore } from '@/store/ITRequest'
+import { useITReqStore } from '@/store/IT-request'
 import { hasProperty } from '@/hooks/useValidate'
+import { dateFormatter } from '@/hooks/useDate'
 import { lang } from '@/hooks/useCommon'
 const store = useITReqStore()
 const cancellation = ref({})
 const tagTypes = {
   Approved: 'primary',
   Rejected: 'info',
-  Pending: 'warning'
+  Reviewing: 'warning'
 }
 onMounted(() => {
   cancellation.value = store.getCancellation ? store.getCancellation : {}
-  switch(cancellation.value.result) {
-    case 'Approve': cancellation.value.result = 'Approved'; break;
-    case 'Reject': cancellation.value.result = 'Rejected'; break;
-  }
 })
 </script>

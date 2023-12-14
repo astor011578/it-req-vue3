@@ -30,6 +30,7 @@ const options = reactive([
 //when v-model of select menu changes, sending new value to parent component
 watch(selectedStatus, (val) => emits('get-children', selectedStatus.value))
 </script>
+
 <style lang="scss" scoped>
 $select-menu-w: 240px;
 $select-menu-h: 24px;

@@ -82,7 +82,7 @@
 <script setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { File } from '@/icons/common/'
-import { useITReqStore } from '@/store/ITRequest'
+import { useITReqStore } from '@/store/IT-request'
 import { hasProperty } from '@/hooks/useValidate'
 import { dateGenerator } from '@/hooks/useDate'
 import { lang } from '@/hooks/useCommon'
@@ -94,8 +94,8 @@ const store = ref({})
 const permission = ref(false)
 const step = ref('')
 const router = useRouter()
-const ITno = useRoute().params.ITno
-const prePath = `${import.meta.env.VITE_APP_BASE_URL}/files/${ITno}`
+const reqNo = useRoute().params.reqNo
+const prePath = `${import.meta.env.VITE_APP_BASE_URL}/uploads/${reqNo}`
 const evidence = ref({})
 const reqData = ref({})
 const loading = ref(false)
@@ -109,7 +109,7 @@ const approve = () => {
   setTimeout(() => {
     axiosReq({
       method: 'patch',
-      url: `/approve?no=${ITno}`,
+      url: `/approve?no=${reqNo}`,
       data: reqData.value
     }).then(() => {
       ElMessage.success(lang('Approve evidence successfully'))
@@ -134,7 +134,7 @@ const reject = () => {
       setTimeout(() => {
         axiosReq({
           method: 'patch',
-          url: `/approve?no=${ITno}`,
+          url: `/approve?no=${reqNo}`,
           data: reqData.value
         }).then(() => {
           loading.value = false

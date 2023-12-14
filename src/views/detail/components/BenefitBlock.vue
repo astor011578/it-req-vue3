@@ -44,7 +44,7 @@
 
 <script setup>
 import { lang } from '@/hooks/useCommon'
-import { useITReqStore } from '@/store/ITRequest'
+import { useITReqStore } from '@/store/IT-request'
 import { hasProperty } from '@/hooks/useValidate'
 import { Increase, Decrease } from '@/icons/common'
 const store = useITReqStore()
@@ -58,7 +58,10 @@ const renderQuality = ref({})
 onMounted(() => {
   status.value = store.getBasicInfo.status
   const benefit = store.getBenefit
-  const { reqType, benefitType, qualityIssue, offlineExp, onlineExp, testerExp, offlineAct, onlineAct, testerAct } = benefit
+  const {
+    reqType, benefitType, qualityIssue, offlineSavingExp, onlineSavingExp,
+    testerSavingExp, offlineSavingAct, onlineSavingAct, testerSavingAct
+  } = benefit
   step.value = store.getSimpleStep
   requestType.value = reqType
   const qualityMapping = {
@@ -74,22 +77,23 @@ onMounted(() => {
   renderEfficiency.value = {
     onlineSavings: {
       title: 'Save online staff time',
-      exp: onlineExp,
-      act: onlineAct
+      exp: onlineSavingExp,
+      act: onlineSavingAct
     },
     offlineSavings: {
       title: 'Save offline staff time',
-      exp: offlineExp,
-      act: offlineAct
+      exp: offlineSavingExp,
+      act: offlineSavingAct
     },
     testerSavings: {
       title: 'Save tester time',
-      exp: testerExp,
-      act: testerAct
+      exp: testerSavingExp,
+      act: testerSavingAct
     }
   }
 })
 </script>
+
 <style scoped lang="scss">
 .icon-increase {
   color: var(--el-color-success);

@@ -36,9 +36,9 @@
 import { TopTitle } from '@/components'
 import { Check, Upload, Calendar, Cancel, Pen } from '@/icons/common/'
 import { ApproveBtn, EvidenceBtn, PostponeBtn, CancelBtn, RevNewBtn, EditNewBtn } from './fnBtns'
-import { useITReqStore } from '@/store/ITRequest'
-const ITno = useRoute().params.ITno
-const title = `IT-Request #${ITno}`
+import { useITReqStore } from '@/store/IT-request'
+const reqNo = useRoute().params.reqNo
+const title = `IT-Request #${reqNo}`
 const status = useITReqStore().getReqStatus
 const reviewingStatuses = ['Reviewing', 'Rejected', 'Returned']
 
@@ -47,7 +47,7 @@ const fnBtn = {
   tip: {
     approve: 'Approve evidence',
     upload: 'Upload evidence',
-    postpone: 'Re-schedule',
+    postpone: 'Reschedule',
     cancel: 'Cancel this IT-Request',
     revNew: 'Approve this IT-Request',
     editNew: 'Edit this IT-Request'
@@ -62,6 +62,7 @@ const fnBtn = {
   }
 }
 </script>
+
 <style lang="scss" scoped>
 //reset el-dialog font-style
 :deep(.el-dialog) {

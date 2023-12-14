@@ -13,14 +13,14 @@
         <el-timeline-item center>
           <el-card>
             <span>
-              <h4>Test-IT start coding</h4>
-              <h5>({{ lang('Owner') }}: {{ turnOn.owner }})</h5>
+              <h4>IT start coding</h4>
+              <h5>({{ lang('Owner') }}: {{ turnOnDate.owner }})</h5>
             </span>
             <br />
             <span class="mt-2">
               <div class="schedule-details rounded p-2 m-2">
                 <div>{{ lang('Turn on date') }}:</div>
-                <div class="ce-blue-color ce-text-bold">{{ turnOn.date }}</div>
+                <div class="ce-blue-color ce-text-bold">{{ dateFormatter(turnOnDate.date) }}</div>
               </div>
             </span>
           </el-card>
@@ -45,7 +45,7 @@
               <div class="schedule-details">
                 <div>{{ lang('Actual date') }}:</div>
                 <div v-if="val.act !== ''" class="ce-blue-color ce-text-bold">
-                  {{ val.act }}
+                  {{ dateFormatter(val.act) }}
                 </div>
                 <div v-else>
                   {{ val.state === 'Rejected' ? `${lang('Rejected,')}\n${lang('re-uploading')}` : val.state }}
@@ -55,31 +55,25 @@
                 <div>{{ lang('Expect date') }}:</div>
                 <div>
                   <div v-for="itemInOld in val.exp.old" :key="itemInOld" class="ce-line-through">
-                    {{ itemInOld }}
+                    {{ dateFormatter(itemInOld) }}
                   </div>
                   <div class="ce-blue-color ce-text-bold">
-                    {{ val.exp.new }}
+                    {{ dateFormatter(val.exp.new) }}
                   </div>
                 </div>
               </div>
               <div class="schedule-details">
                 <div>KPI:</div>
                 <div>
-                  {{ lang('Postpone') }}:
-                  <span v-if="val.preKPI[2] !== undefined" :class="warningOverZero(val.preKPI[2]) ? 'ce-red-color ce-text-bold' : ''">
-                    {{ val.preKPI[2] }},
-                  </span>
-                  <span :class="warningOverZero(val.KPI[2]) ? 'ce-red-color ce-text-bold' : ''">
-                    {{ val.KPI[2] }}
+                  {{ lang('Rescheduling') }}:
+                  <span :class="warningOverZero(val.KPI.reschedule) ? 'ce-red-color ce-text-bold' : ''">
+                    {{ val.KPI.reschedule }}
                   </span>
                 </div>
                 <div>
                   {{ lang('Delay') }}:
-                  <span v-if="val.preKPI[3] !== undefined" :class="warningOverZero(val.preKPI[3]) ? 'ce-red-color ce-text-bold' : ''">
-                    {{ val.preKPI[3] }},
-                  </span>
-                  <span :class="warningOverZero(val.KPI[3]) ? 'ce-red-color ce-text-bold' : ''">
-                    {{ val.KPI[3] }}
+                  <span :class="warningOverZero(val.KPI.delay) ? 'ce-red-color ce-text-bold' : ''">
+                    {{ val.KPI.delay }}
                   </span>
                 </div>
               </div>
@@ -99,8 +93,9 @@
 
 <script setup>
 import { MoreFilled } from '@element-plus/icons-vue'
-import { useITReqStore } from '@/store/ITRequest'
+import { useITReqStore } from '@/store/IT-request'
 import { Check, Cancel } from '@/icons/common/'
+import { dateFormatter } from '@/hooks/useDate'
 import { lang } from '@/hooks/useCommon'
 import { hasProperty } from '@/hooks/useValidate'
 
@@ -134,10 +129,10 @@ const timeline = {
 }
 const ITReqStore = useITReqStore()
 const schedule = ref({})
-const turnOn = ref({})
+const turnOnDate = ref({})
 
 onMounted(() => {
-  turnOn.value = ITReqStore.getTurnOn
+  turnOnDate.value = ITReqStore.getTurnOnDate
   const _schedule = ITReqStore.getSchedule
   for (const [key, value] of Object.entries(_schedule)) {
     if (key === 'release' || key === 'monitor') if (!_schedule[key]) break

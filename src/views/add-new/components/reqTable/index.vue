@@ -20,8 +20,7 @@
         <UploadFiles
           :size="size"
           :plain="plain"
-          :upload-to="uploadTo"
-          @get-children="getAttachFiles"
+          @get-children="getAttachedFiles"
         />
       </el-form-item>
     </div>
@@ -32,24 +31,20 @@
 import { lang } from '@/hooks/useCommon'
 import { Notice, PrintReqTable, ManualReqTable, PlantRadios } from './components'
 import { UploadFiles } from '@/components'
-import { useNewStore } from '@/store/addNew'
-const addNewStore = useNewStore()
-const refreshCode = ref(0)    //提供子組件判斷是否需要重新向 store 取值
-const attachFiles = ref([])   //儲存附件的資訊
+import { useNewReqStore } from '@/store/new-request'
+const newReqStore = useNewReqStore()
+const refreshCode = ref(0)      //提供子組件判斷是否需要重新向 store 取值
+const attachedFiles = ref([])   //儲存附件的資訊
 //UploadFiles 組件變數
 const size = 'small'
 const plain = true
-const uploadTo = 'attachment'
 //取得子組件傳來的 needRefresh
 const getNeedRefresh = (needRefresh) => { if (needRefresh) refreshCode.value++ }
 //從子組件 UploadFiles.vue 中取得附件資訊
-const getAttachFiles = async ($attachFiles) => {
-  for await (const file of $attachFiles) {
-    const { path, filename, originalname } = file
-    attachFiles.value.push({ path, filename, originalname })
-  }
-  addNewStore.setAttachFiles(attachFiles.value)
+const getAttachedFiles = async ($attachedFiles) => {
+  attachedFiles.value = Object.assign([], $attachedFiles)
+  newReqStore.setAttachedFiles(attachedFiles.value)
 }
-//儲存 attachFiles 預設值到 store 中
-onMounted(() => addNewStore.setAttachFiles(attachFiles.value))
+//儲存 attachedFiles 預設值到 store 中
+onMounted(() => newReqStore.setAttachedFiles(attachedFiles.value))
 </script>

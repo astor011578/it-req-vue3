@@ -36,8 +36,8 @@
 <script setup>
 import { lang } from '@/hooks/useCommon'
 import { ValidateText } from '@/components'
-import { useNewStore } from '@/store/addNew'
-const addNewStore = useNewStore()
+import { useNewReqStore } from '@/store/new-request'
+const newReqStore = useNewReqStore()
 const benefitType = ref('')       //儲存 benefit 類型
 
 //綁定 el-input-number 的數值
@@ -55,8 +55,8 @@ const formInputs = {
 }
 
 onMounted(async () => {
-  addNewStore.setSavingTimes(savingTimes.value)
-  benefitType.value = addNewStore.getBenefitType
+  newReqStore.setSavingTimes(savingTimes.value)
+  benefitType.value = newReqStore.getBenefitType
   await setValidateString()
 })
 
@@ -74,7 +74,7 @@ const setValidateString = async () => {
     const warningOfEfficiency = 'Must choose at least one saving time to fill in'
     validateString = benefitType.value === 'Efficiency' ? warningOfEfficiency : ''
   }
-  if (benefitType.value === 'Efficiency') addNewStore.setSpecificValidate('benefit.savingTimes', validateString)
+  if (benefitType.value === 'Efficiency') newReqStore.setSpecificValidate('benefit.savingTimes', validateString)
 }
 
 //獲取父組件傳來的 refreshCode, 當 benefit 類型有改變時, refreshCode 數值也會改變
@@ -82,7 +82,7 @@ const props = defineProps({ refreshCode: { type: Number, default: 0 } })
 
 //監聽父組件的 refreshCode 是否有改變, 有則刷新 benefitType 與 store 裡面的 validate
 watch(props, (val) => {
-  benefitType.value = addNewStore.getBenefitType
+  benefitType.value = newReqStore.getBenefitType
   setValidateString()
 })
 
@@ -91,7 +91,7 @@ const inputListener = async (value) => {
   for await (const [key, value] of Object.entries(savingTimes.value)) {
     if (typeof value !== 'number') savingTimes.value[key] = 0
   }
-  addNewStore.setSavingTimes(savingTimes.value)
+  newReqStore.setSavingTimes(savingTimes.value)
   await setValidateString()
 }
 </script>

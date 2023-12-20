@@ -24,11 +24,11 @@
 <script setup>
 import { lang } from '@/hooks/useCommon'
 import { ValidateText } from '@/components'
-import { useNewStore } from '@/store/addNew'
+import { useNewReqStore } from '@/store/new-request'
 import { SelectMenu } from '@/components'
 //從父組件取得 refreshCode
 const props = defineProps({ refreshCode: { type: Number, default: 0 } })
-const addNewStore = useNewStore()
+const newReqStore = useNewReqStore()
 const benefitType = ref('')       //儲存 benefit 類型
 const selected = ref('')          //綁定選中的選項數值
 //用來渲染選單選項
@@ -42,25 +42,25 @@ const options = ref([
 
 //從 store 中獲取 benefit 類型
 onMounted(() => {
-  benefitType.value = addNewStore.getBenefitType
+  benefitType.value = newReqStore.getBenefitType
   setValidateString()
 })
 //監聽父組件的 refreshCode 是否有變化, 並重新獲取 benefit 類型
 watch(props, (val) => {
-  benefitType.value = addNewStore.getBenefitType
-  if (benefitType.value === 'Efficiency') addNewStore.setQualityIssue('')
+  benefitType.value = newReqStore.getBenefitType
+  if (benefitType.value === 'Efficiency') newReqStore.setQualityIssue('')
   setValidateString()
 })
 
 //從子組件 SelectMenu.vue 取得選中的選項值, 並儲存至 store 中
 const getSelectedOption = (selectedOption) => {
   selected.value = selectedOption
-  addNewStore.setQualityIssue(selected.value)
+  newReqStore.setQualityIssue(selected.value)
   setValidateString()
 }
 //複用程式碼: 儲存 validate 字串的值到 store 中
 const setValidateString = () => {
   const validateString = benefitType.value === 'Quality' && selected.value === '' ? 'Must select which issue will be improved' : ''
-  addNewStore.setSpecificValidate('benefit.qualityIssue', validateString)
+  newReqStore.setSpecificValidate('benefit.qualityIssue', validateString)
 }
 </script>

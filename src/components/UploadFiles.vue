@@ -23,31 +23,18 @@
         </div>
       </template>
     </el-upload>
-    <div id="upload-submitBtn" class="ce-dialog-footer-btn">
-      <el-button
-        :class="uploadList.length && !disabled ? 'alerting' : ''"
-        type="primary"
-        :plain="plain"
-        :loading="loading"
-        :disabled="disabled"
-        @click="uploadFile"
-      >
-        {{ lang('Upload to server') }}
-      </el-button>
-    </div>
   </span>
 </template>
 
 <script setup>
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { lang } from '@/hooks/useCommon'
+import { ElMessage } from 'element-plus'
 import { UploadCloud, Loading } from '@/icons/common'
-const ITno = useRoute().params.ITno
+import { lang } from '@/hooks/useCommon'
+const reqNo = useRoute().params.reqNo
 let loading = ref(false)
 let size = ref('')
 let plain = ref(true)
 let disabled = ref(false)
-let alerting = ref('')
 
 //Props & Emits
 const props = defineProps({
@@ -74,27 +61,11 @@ if (props.size) {
   if (props.size === 'large') plain.value = false
 }
 
-//http-request url
-let reqUrl = ref('')
-if (props.uploadTo) {
-  switch (props.uploadTo) {
-    case 'attachment': {
-      reqUrl.value = '/upload/attachment'
-      break
-    }
-    case 'evidence': {
-      reqUrl.value = `/upload/evidence?IT_no=${ITno}&step=${props.step}`
-      break
-    }
-  }
-}
-
 //判斷重複檔案名稱, 以及第一步的檔案預覽
 let fileList = ref([])
 //要上傳的檔案
 let uploadList = ref([])
-//要傳回給父組件的內容
-let emitList = ref([])
+
 //upload on-change handler
 const uploadChange = (file, files) => {
   if (files.length) {
@@ -115,7 +86,6 @@ const uploadChange = (file, files) => {
         while (extArr.length) extArr.pop()
         while (fileList.value.length) fileList.value.pop()
         while (uploadList.value.length) uploadList.value.pop()
-        while (emitList.value.length) emitList.value.pop()
         return false
       }
     }
@@ -127,11 +97,20 @@ const uploadChange = (file, files) => {
       while (extArr.length) extArr.pop()
       while (fileList.value.length) fileList.value.pop()
       while (uploadList.value.length) uploadList.value.pop()
-      while (emitList.value.length) emitList.value.pop()
+      return false
+    }
+    
+    //check duplicate file
+    const existedIndex = files.findIndex(item => item.name === file.name)
+    const existedLastIndex = files.findLastIndex(item => item.name === file.name)
+    if(existedIndex !== existedLastIndex) {
+      ElMessage.info(lang('Duplicate file'))
+      files.pop()
       return false
     } else {
       fileList.value = JSON.parse(JSON.stringify(files))
       uploadList.value.push(file)
+      emits('get-children', uploadList.value)
     }
   }
 }
@@ -142,68 +121,10 @@ const uploadRemove = (file, files) => {
   uploadList.value.forEach((item, index) => {
     if (item.name === file.name) uploadList.value.splice(index, 1)
   })
-  console.log(file)
-  console.log(files)
-}
-
-if (uploadList.value.length) alerting.value = 'alerting'
-
-//upload send http request
-const uploadFile = () => {
-  const content = 'Are you sure to upload? This action cannot be undone'
-  ElMessageBox.confirm(lang(content), 'Warning', {
-    confirmButtonText: lang('OK'),
-    cancelButtonText: lang('Cancel'),
-    type: 'warning'
-  })
-    .then(() => {
-      loading.value = true
-      while (emitList.value.length) emitList.value.pop()
-      let formData = new FormData()
-      uploadList.value.forEach((item, index) => formData.append('files', item.raw))
-
-      axiosReq({
-        url: reqUrl.value,
-        method: 'post',
-        timeout: 30000,
-        data: formData,
-        isUploadFile: true
-      }).then((res) => {
-        setTimeout(() => {
-          loading.value = false
-          switch (res.code) {
-            case 200: {
-              if (res.data) {
-                res.data.forEach((doc) => {
-                  emitList.value.push({
-                    path: doc.path,
-                    filename: doc.filename,
-                    originalname: doc.originalname
-                  })
-                })
-                emits('get-children', emitList.value)
-                disabled.value = true
-                ElMessage.success(lang('Upload to server successfully'))
-                while (uploadList.value.length) uploadList.value.pop()
-              } else {
-                ElMessage.warning(lang('No files selected'))
-              }
-              break
-            }
-            default: {
-              ElMessage.error(lang('Failed to upload files'))
-              while (fileList.value.length) fileList.value.pop()
-              while (uploadList.value.length) uploadList.value.pop()
-              while (emitList.value.length) emitList.value.pop()
-              break
-            }
-          }
-        }, 2000)
-      })
-    })
-    .catch(() => ElMessage.info(lang('Action cancelled')))
+  emits('get-children', uploadList.value)
 }
 </script>
+
 <style lang="scss">
 #upload-container.large {
   width: 350px;
@@ -287,22 +208,6 @@ const uploadFile = () => {
 
   #upload-submitBtn {
     width: 100%;
-  }
-
-  .el-button.alerting {
-    animation-duration: 3s;
-    animation-iteration-count: infinite;
-    animation-name: alerting;
-
-    @keyframes alerting {
-      10%,
-      90% {
-        transform: scale(1, 1);
-      }
-      50% {
-        transform: scale(1.1, 1.1);
-      }
-    }
   }
 }
 </style>

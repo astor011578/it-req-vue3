@@ -12,30 +12,30 @@
 
 <script setup>
 import { lang } from '@/hooks/useCommon'
-import { useNewStore } from '@/store/addNew'
+import { useNewReqStore } from '@/store/new-request'
 import { ElMessage, ElLoading } from 'element-plus'
-const addNewStore = useNewStore()
+const newReqStore = useNewReqStore()
 const router = useRouter()
 const loading = ref(false)    //是否啟用 loading 效果
 
 //輸入驗證與送出表單
 const validateAllInputs = async () => {
-  await addNewStore.checkEmpty(false)
+  await newReqStore.checkEmpty(false)
   await iterateValidates()
 }
 
-//遍歷 addNewStore.state.validates.value, 如果有值則移動 y-scroll
+//遍歷 newReqStore.state.validates.value, 如果有值則移動 y-scroll
 const iterateValidates = async () => {
-  const validates = await addNewStore.getValidate
+  const validates = await newReqStore.getValidate
   let isPass = false    //是否所有欄位都通過輸入驗證
 
   for await (const [outerKey, outerVal] of Object.entries(validates)) {
     for await (const [innerKey, innerVal] of Object.entries(outerVal)) {
-      const benefitType = addNewStore.getBenefitType
+      const benefitType = newReqStore.getBenefitType
       isPass = innerVal !== '' ? false : true
       if (innerVal !== '') {
         switch (innerKey) {
-          case 'pg': {
+          case 'pgr': {
             window.scrollTo({ top: 0, behavior: 'smooth' })
             break
           }
@@ -64,13 +64,6 @@ const iterateValidates = async () => {
             window.scrollTo({ top: scrollHeight, behavior: 'smooth' })
             break
           }
-          case 'turnOn':
-          case 'UAT1':
-          case 'UAT2': 
-          case 'release':
-          case 'monitor': {
-            break
-          }
           default: {
             break
           }
@@ -94,7 +87,7 @@ const submit = async () => {
     background: 'rgba(168, 171, 178, 0.3)'
   })
   setTimeout(async () => {
-    const isSuccess = await addNewStore.submitApplication()
+    const isSuccess = await newReqStore.submitApplication()
     if (isSuccess) {
       ElMessage.success(lang('New a IT-Request successfully'))
       router.replace({ path: '/tables' })
@@ -107,6 +100,7 @@ const submit = async () => {
   }, 2000)
 }
 </script>
+
 <style scoped lang="scss">
 :deep(.el-col) {
   margin: auto;

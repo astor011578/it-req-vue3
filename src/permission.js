@@ -1,7 +1,7 @@
 import router from '@/router'
 import { useUserStore } from '@/store/user'
 import { usePermissionStore } from '@/store/permission'
-import { useNewStore } from '@/store/addNew'
+import { useNewReqStore } from '@/store/new-request'
 import { getToken } from '@/utils/auth'
 import { lang } from '@/hooks/useCommon'
 import { ElLoading } from 'element-plus'
@@ -32,14 +32,14 @@ router.beforeEach(async (to, from, next) => {
   //store instances
   const userStore = useUserStore()
   const permissionStore = usePermissionStore()
-  const addNewStore = useNewStore()
+  const newReqStore = useNewReqStore()
 
-  //在變換路由前重置 addNewStore 中的資訊
-  await addNewStore.resetApplication()
-  await addNewStore.resetValidate()
+  //在變換路由前重置 newReqStore 中的資訊
+  await newReqStore.resetApplication()
+  await newReqStore.resetValidate()
 
-  let isIndex = (to.path === '/login' || to.path === '/tables') ? 1 : 0
-  axiosReq({ method: 'patch', url: `/summary/views?isIndex=${isIndex}` })
+  // let isIndex = (to.path === '/login' || to.path === '/tables') ? 1 : 0
+  // axiosReq({ method: 'patch', url: `/summary/views?isIndex=${isIndex}` })
 
   if (getToken()) {
     //1. 如果已經取得 token (通行證)

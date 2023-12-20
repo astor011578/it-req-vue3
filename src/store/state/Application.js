@@ -4,8 +4,8 @@
 class Application {
   constructor() {
     this.coreTeam = {
-      reqr: ['', ''],
-      pg: ['', '']
+      reqr: {},
+      pgr: {}
     }
     this.benefit = {
       type: 'Efficiency',
@@ -27,14 +27,12 @@ class Application {
       purpose: '',
       plant: ''
     }
-    this.attachFiles = []
-    this.type = 'Project'
+    this.attachedFiles = []
+    this.type = ''
     this.schedule = {
-      turnOn: '',
+      turnOnDate: '',
       UAT1: '',
-      UAT2: '',
-      release: '',
-      monitor: ''
+      UAT2: ''
     }
   }
 }

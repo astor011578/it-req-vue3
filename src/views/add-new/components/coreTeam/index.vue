@@ -6,7 +6,7 @@
       <el-form-item :label="lang('Requester name')">
         <el-row class="form-row-width">
           <el-col :span="12">
-            <RequesterName />
+            <ReqrName />
           </el-col>
         </el-row>
       </el-form-item>
@@ -14,7 +14,7 @@
       <el-form-item :label="lang('IT name')">
         <el-row class="form-row-width">
           <el-col :span="12">
-            <ProgrammerName />
+            <PgrName />
           </el-col>
           <el-col :span="12">
             <ValidateText
@@ -31,8 +31,8 @@
 <script setup>
 import { lang } from '@/hooks/useCommon'
 import { ValidateText } from '@/components'
-import RequesterName from './components/RequesterName.vue'
-import ProgrammerName from './components/ProgrammerName.vue'
+import ReqrName from './components/ReqrName.vue'
+import PgrName from './components/PgrName.vue'
 const keyOuter = 'coreTeam'
-const keyInner = 'pg'
+const keyInner = 'pgr'
 </script>

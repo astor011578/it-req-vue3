@@ -67,6 +67,7 @@ const general = {
   'Please login again': '請重新登入',
   'Please select user': '請選擇使用者',
   'No files selected': '尚未選擇檔案',
+  'Duplicate file': '此檔案已存在',
   'Continue?': '是否要繼續？',
   'This action cannot be undone': '此操作無法撤銷',
   'You have not completed the request table yet': '你尚未填妥需求單模板',

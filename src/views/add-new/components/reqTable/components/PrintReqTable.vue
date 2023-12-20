@@ -22,15 +22,15 @@
 import * as XLSX from 'xlsx/xlsx.mjs'
 import { genFileId, ElMessage } from 'element-plus'
 import { lang } from '@/hooks/useCommon'
-import { useNewStore } from '@/store/addNew'
+import { useNewReqStore } from '@/store/new-request'
 const uploadRef = ref(null)   //綁定 el-upload
-const addNewStore = useNewStore()
+const newReqStore = useNewReqStore()
 const emits = defineEmits(['get-need-refresh'])
 //將 file 移出 file list 時觸發
 const removeTemplate = (files) => {
   uploadRef.value.clearFiles()
   files.raw = null
-  addNewStore.setReqTable({
+  newReqStore.setReqTable({
     reqName: '',
     stage: '',
     customer: '',
@@ -71,7 +71,7 @@ const readExcel = (files) => {
         return
       }
     }
-    addNewStore.setReqTable({
+    newReqStore.setReqTable({
       reqName: sheet[XLSX.utils.encode_cell({ r: 2, c: 3 })].v,
       stage: sheet[XLSX.utils.encode_cell({ r: 3, c: 3 })].v,
       customer: sheet[XLSX.utils.encode_cell({ r: 4, c: 3 })].v,
@@ -87,6 +87,7 @@ const readExcel = (files) => {
   reader.readAsArrayBuffer(file)
 }
 </script>
+
 <style scoped lang="scss">
 :deep(.el-upload) {
   margin: 4px 0;

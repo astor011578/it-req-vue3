@@ -21,11 +21,11 @@
 <script setup>
 import { lang } from '@/hooks/useCommon'
 import { ValidateText } from '@/components'
-import { useNewStore } from '@/store/addNew'
-const addNewStore = useNewStore()
+import { useNewReqStore } from '@/store/new-request'
+const newReqStore = useNewReqStore()
 const plant = ref('')   //綁定 el-radio 中的值
 //取得 plant 初始值
-onMounted(() => plant.value = addNewStore.getPlant)
+onMounted(() => plant.value = newReqStore.getPlant)
 //監聽 plant 數值的變化, 有改變就 set 回 store
-watch(plant, (value) => addNewStore.setPlant(plant.value))
+watch(plant, (value) => newReqStore.setPlant(plant.value))
 </script>

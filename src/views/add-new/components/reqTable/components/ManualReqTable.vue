@@ -26,8 +26,8 @@
 <script setup>
 import { lang } from '@/hooks/useCommon'
 import { ValidateText } from '@/components'
-import { useNewStore } from '@/store/addNew'
-const addNewStore = useNewStore()
+import { useNewReqStore } from '@/store/new-request'
+const newReqStore = useNewReqStore()
 const reqTable = ref({})    //綁定各個 el-input 裡的值
 const props = defineProps({ refreshCode: { type: Number, default: 0 } })
 //渲染表單輸入項用
@@ -43,9 +43,9 @@ const formInputs = {
 }
 
 //監聽輸入項的值是否被變更
-const inputListener = (inputValue) => addNewStore.setReqTable(reqTable.value)
-onMounted(() => reqTable.value = addNewStore.getReqTable)
+const inputListener = (inputValue) => newReqStore.setReqTable(reqTable.value)
+onMounted(() => reqTable.value = newReqStore.getReqTable)
 
 //監聽 props.refreshCode 是否有改變
-watch(props, (value) => reqTable.value = addNewStore.getReqTable)
+watch(props, (value) => reqTable.value = newReqStore.getReqTable)
 </script>

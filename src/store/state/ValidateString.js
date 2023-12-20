@@ -4,7 +4,7 @@
 class Validate {
   constructor() {
     this.coreTeam = {
-      pg: ''
+      pgr: ''
     }
     this.benefit = {
       qualityIssue: '',
@@ -22,7 +22,7 @@ class Validate {
       plant: ''
     }
     this.schedule = {
-      turnOn: '',
+      turnOnDate: '',
       UAT1: '',
       UAT2: '',
       release: '',

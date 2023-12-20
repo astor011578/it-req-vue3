@@ -53,7 +53,7 @@
 import { ElMessage } from 'element-plus'
 import { lang } from '@/hooks/useCommon'
 import { Search, Loading } from '@/icons/common/'
-import { useNewStore } from '@/store/addNew'
+import { useNewReqStore } from '@/store/new-request'
 const props = defineProps({ dept: { type: String } })
 const emits = defineEmits([ 'get-user-info' ])
 const dialogState = ref(false)  //綁定 dialog 是否開啟
@@ -84,13 +84,17 @@ const inputChange = ($keyword) => {
          */
         const createFilter = (queryString) => {
           return (user) => {
+            const { name, id } = user
+            const _query = queryString.toLowerCase()
+            const searchInName = name.toLowerCase().indexOf(_query)
+            const searchInId = id.toLowerCase().indexOf(_query)
             return (
               //有兩種過濾方式: 
               //(1) 遍歷所有元素, 有符合 $keyword 都行
-              // user.name.toLowerCase().includes(queryString.toLowerCase()) === true  // 使用 includes()
-              // user.name.toLowerCase().indexOf(queryString.toLowerCase()) !== -1  // 使用 indexOf()
+              //user.name.toLowerCase().includes(queryString.toLowerCase()) === true  // 使用 includes()
+              //user.name.toLowerCase().indexOf(queryString.toLowerCase()) !== -1  // 使用 indexOf()
               //(2) 從第一個字開始遍歷
-              user.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+              searchInName === 0 || searchInId === 0
             )
           }
         }
@@ -118,16 +122,17 @@ const selectHandler = (selection) => {
 onMounted(() => {
   loading.value = true
   setTimeout(async () => {
-    resource.value = await useNewStore().fetchUsers(props.dept)
-    resource.value = resource.value.filter((user) => { return user.name })
+    const searchQuery = props.dept ? props.dept : null
+    resource.value = await useNewReqStore().fetchUsers(searchQuery)
+    resource.value = resource.value.filter(user => { return user.name })
     filteredData.value = resource.value
   }, 1500)
   loading.value = false
 })
 
-//按下送出按鈕後關閉 modal, 並 store programmer 的資訊
+//按下送出按鈕後關閉 modal, 並 store user 的資訊
 const submitPgr = async () => {
-  const isEmpty = Object.keys(selected.value).length === 0    //是否沒有選擇任何一個 programmer
+  const isEmpty = Object.keys(selected.value).length === 0    //是否沒有選擇任何一個 user
   if (isEmpty) {
     ElMessage.error(lang('Please select user'))
   } else {
@@ -136,6 +141,7 @@ const submitPgr = async () => {
   }
 }
 </script>
+
 <style scoped lang="scss">
 :deep(.el-table) {
   //隱藏搜尋結果 table header 中的選擇框

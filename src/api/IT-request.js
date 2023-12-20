@@ -14,3 +14,11 @@ export const getRequest = (reqNo) => {
     isParams: true
   })
 }
+
+export const newRequest = (data) => {
+  return request({
+    method: 'post',
+    url: '/request/new',
+    data
+  })
+}

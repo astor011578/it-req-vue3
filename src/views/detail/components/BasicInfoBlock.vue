@@ -13,7 +13,7 @@
         </el-descriptions-item>
         <el-descriptions-item :label="lang('Type')">
           <el-tag v-if="basicInfo.type" size="small">{{ basicInfo.type }}</el-tag>
-          <span v-else>N/A</span>
+          <span v-else class="ce-gray-color-italic">N/A</span>
         </el-descriptions-item>
         <el-descriptions-item :label="lang('Request name')">{{ basicInfo.reqName }}</el-descriptions-item>
         <el-descriptions-item :label="lang('Status')">
@@ -22,7 +22,10 @@
         <el-descriptions-item :label="lang('Requester')">{{ basicInfo.reqrName }}</el-descriptions-item>
         <el-descriptions-item :label="lang('IT')">{{ basicInfo.pgrName }}</el-descriptions-item>
         <el-descriptions-item :label="lang('Issue date')">{{ dateFormatter(basicInfo.issueDate) }}</el-descriptions-item>
-        <el-descriptions-item :label="lang('Approve date')">{{ dateFormatter(basicInfo.review.date) }}</el-descriptions-item>
+        <el-descriptions-item :label="lang('Approve date')">
+          <span v-if="basicInfo.review.date">{{ dateFormatter(basicInfo.review.date) }}</span>
+          <span v-else class="ce-gray-color-italic">N/A</span>
+        </el-descriptions-item>
         <el-descriptions-item :label="lang('Lead time (day)')">
           <span v-if="basicInfo.leadTime < 0" class="ce-gray-color-italic">N/A</span>
           <span v-else>{{ basicInfo.leadTime }}</span>

@@ -28,11 +28,12 @@ const props = defineProps({
 const store = ref({})
 const permission = ref(false)
 const router = useRouter()
-const ITno = useRoute().params.ITno
-const toRevNew = () => router.push({ path: `/review/new/${ITno}`, replace: true })
+const reqNo = useRoute().params.reqNo
+const toRevNew = () => router.push({ path: `/review/new/${reqNo}`, replace: true })
 onMounted(() => store.value = useITReqStore())
-watch(store, async (val) => permission.value = await store.value.getPermission.revNew)
+watch(store, async () => permission.value = await store.value.getPermission.revNew)
 </script>
+
 <style lang="scss" scoped>
 a {
   display: inline-flex;

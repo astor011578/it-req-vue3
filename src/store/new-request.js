@@ -140,13 +140,12 @@ export const useNewReqStore = defineStore('newRequest', {
     },
     async submitApplication() {
       //for debugging
-      console.log('application: ', this.application)
-      console.log('validate: ', this.validate)
+      // console.log('application: ', this.application)
+      // console.log('validate: ', this.validate)
       try {
         const attachedFiles = await this.uploadAttachedFiles()
         this.application.attachedFiles = Object.assign([], attachedFiles)
         const res = await newRequest(this.application)
-        console.log(res)
         if (res?.code !== 200) {
           //拋出異常就會直接進入 catch 區塊中
           throw {

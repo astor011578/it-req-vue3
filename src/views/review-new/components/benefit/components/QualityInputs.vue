@@ -10,7 +10,7 @@
 
 <script setup>
 import { lang } from '@/hooks/useCommon'
-import { useITReqStore } from '@/store/ITRequest'
+import { useITReqStore } from '@/store/IT-request'
 const store = useITReqStore()
 const qualityIssue = ref('')
 const mappings = {

@@ -27,7 +27,7 @@
 <script setup>
 import { lang } from '@/hooks/useCommon'
 import { Notice, QualityInputs, EfficiencyInputs } from './components'
-import { useITReqStore } from '@/store/ITRequest'
+import { useITReqStore } from '@/store/IT-request'
 const store = useITReqStore()
 const benefitType = ref('')
 onMounted(() => benefitType.value = store.getBenefit.benefitType)

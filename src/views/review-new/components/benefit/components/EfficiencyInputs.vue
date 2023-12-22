@@ -22,7 +22,7 @@
 
 <script setup>
 import { lang } from '@/hooks/useCommon'
-import { useITReqStore } from '@/store/ITRequest'
+import { useITReqStore } from '@/store/IT-request'
 const store = useITReqStore()
 //綁定 el-input-number 的數值
 const savingTimes = ref({
@@ -38,12 +38,13 @@ const formInputs = {
 }
 
 onMounted(async () => {
-  const { offlineExp, onlineExp, testerExp } = store.getBenefit
-  savingTimes.value.tester = testerExp
-  savingTimes.value.onlineStaff = onlineExp
-  savingTimes.value.offlineStaff = offlineExp
+  const { offlineSavingExp, onlineSavingExp, testerSavingExp } = store.getBenefit
+  savingTimes.value.tester = testerSavingExp
+  savingTimes.value.onlineStaff = onlineSavingExp
+  savingTimes.value.offlineStaff = offlineSavingExp
 })
 </script>
+
 <style scoped lang="scss">
 #saving-time {
   list-style: none;

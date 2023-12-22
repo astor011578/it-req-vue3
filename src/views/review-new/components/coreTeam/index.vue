@@ -7,17 +7,17 @@
         <el-row class="form-row-width">
           <el-col :span="12">
             <span class="flex">
-              <el-input v-model="requesterName" disabled />
+              <el-input v-model="reqrName" disabled />
             </span>
           </el-col>
         </el-row>
       </el-form-item>
-      <!-- Test-IT name -->
-      <el-form-item :label="lang('Test-IT name')">
+      <!-- IT name -->
+      <el-form-item :label="lang('IT name')">
         <el-row class="form-row-width">
           <el-col :span="12">
             <span class="flex">
-              <el-input v-model="programmerName" disabled />
+              <el-input v-model="pgrName" disabled />
             </span>
           </el-col>
         </el-row>
@@ -28,11 +28,11 @@
 
 <script setup>
 import { lang } from '@/hooks/useCommon'
-import { useITReqStore } from '@/store/ITRequest'
-const requesterName = ref('')
-const programmerName = ref('')
+import { useITReqStore } from '@/store/IT-request'
+const reqrName = ref('')
+const pgrName = ref('')
 onMounted(() => {
-  requesterName.value = useITReqStore().getReqrInfo.name
-  programmerName.value = useITReqStore().getPgInfo.name
+  reqrName.value = useITReqStore().getReqrInfo.name
+  pgrName.value = useITReqStore().getPgrInfo.name
 })
 </script>

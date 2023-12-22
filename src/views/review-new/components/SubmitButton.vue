@@ -27,9 +27,9 @@
 <script setup>
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 import { lang } from '@/hooks/useCommon'
-import { useNewStore } from '@/store/addNew'
-const ITno = useRoute().params.ITno
-const addNewStore = useNewStore()
+import { useNewReqStore } from '@/store/new-request'
+const reqNo = useRoute().params.reqNo
+const newReqStore = useNewReqStore()
 const router = useRouter()
 const loading = ref(false)    //是否啟用 loading 效果
 
@@ -56,9 +56,9 @@ const notApprove = (result) => {
 
 //輸入驗證與送出表單
 const validateInputs = async () => {
-  await addNewStore.checkEmpty(true)
-  await addNewStore.checkIllegalDate()
-  const validates = await addNewStore.getValidate
+  await newReqStore.checkEmpty(true)
+  await newReqStore.checkIllegalDate()
+  const validates = await newReqStore.getValidate
   let isPass = false    //是否所有欄位都通過輸入驗證
   for await (const [key, val] of Object.entries(validates.schedule)) {
     isPass = val !== '' ? false : true
@@ -78,7 +78,7 @@ const submit = async (reviewResult, message) => {
     background: 'rgba(168, 171, 178, 0.3)'
   })
   setTimeout(async () => {
-    const isSuccess = await addNewStore.reviewApplication(ITno, reviewResult, message)
+    const isSuccess = await newReqStore.reviewApplication(reqNo, reviewResult, message)
     if (isSuccess) {
       ElMessage.success(lang('Review a IT-Request successfully'))
       router.replace({ path: '/tables' })
@@ -91,6 +91,7 @@ const submit = async (reviewResult, message) => {
   }, 2000)
 }
 </script>
+
 <style scoped lang="scss">
 :deep(.el-col) {
   margin: auto;

@@ -27,11 +27,11 @@
 
 <script setup>
 import { ValidateText } from '@/components'
-import { useNewStore } from '@/store/addNew'
+import { useNewReqStore } from '@/store/new-request'
 import { lang } from '@/hooks/useCommon'
 import { dateFormatter } from '@/hooks/useDate'
 const props = defineProps({ refreshCode: { type: Number, default: 0 } })
-const store = useNewStore()
+const store = useNewReqStore()
 const requestType = ref('')       //需求類型
 const formInputs = ref({})        //渲染表單用
 //綁定 el-date-picker 的值

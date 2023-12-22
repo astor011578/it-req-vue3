@@ -16,8 +16,8 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { lang } from '@/hooks/useCommon'
 import { ExclamationTriangle } from '@/icons/common'
-import { useNewStore } from '@/store/addNew'
-const addNewStore = useNewStore()
+import { useNewReqStore } from '@/store/new-request'
+const newReqStore = useNewReqStore()
 const emits = defineEmits([ 'get-need-refresh' ])
 //綁定 type radio 的值
 const type = ref('Project')
@@ -48,7 +48,7 @@ const radioListener = async (option) => {
 
 //封裝重複的程式碼: 將 type 數值的變化儲存到 store, 並告知父組件需要 refresh 數值
 const setTypeAndRefresh = (type) => {
-  addNewStore.setRequestType(type)
+  newReqStore.setRequestType(type)
   emits('get-need-refresh', true)
 }
 </script>

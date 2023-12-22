@@ -21,24 +21,25 @@
 <script setup>
 import { FullLoading } from '@/components'
 import { CoreTeamBlock, BenefitBlock, ReqTableBlock, ScheduleBlock, SubmitButton } from './components'
-import { useITReqStore } from '@/store/ITRequest'
+import { useITReqStore } from '@/store/IT-request'
 import { useUserStore } from '@/store/user'
 const router = useRouter()
 const store = useITReqStore()
-const ITno = useRoute().params.ITno
+const reqNo = useRoute().params.reqNo
 const loading = ref(false)
 onMounted(async () => {
   loading.value = true
-  store.setITNo(ITno)
-  await store.getITRequestInfo()
+  store.setReqNo(reqNo)
+  await store.getITReqInfo()
   const isReviewing = store.getReqStatus === 'Reviewing'
-  const username = useUserStore().username
-  const isPg = store.getPgInfo.id === username ? true : false
-  const permission = isPg && isReviewing ? true : false
+  const userId = useUserStore().userId
+  const isPgr = store.getPgrInfo.id === userId ? true : false
+  const permission = isReviewing && isPgr ? true : false
   loading.value = false
   if (!permission) router.push({ path: '/401', replace: true })
 })
 </script>
+
 <style lang="scss">
 $input-w-relative: 100%;
 $input-w-absolute: 300px;

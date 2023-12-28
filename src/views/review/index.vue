@@ -60,6 +60,7 @@
             <el-button
               v-else-if="row.category === 'Reviewing'"
               :icon="Pen"
+              :disabled="row.recipient[1] === userStore.userId ? false : true"
               type="info"
               plain
               class="p-2"
@@ -115,7 +116,6 @@ const queryData = async () => {
   loading.value = true
   await getPendings(userStore.userId, selected.value)
     .then(res => {
-      console.log(res.data)
       tableData.value = res.data
       totalPage.value = tableData.value.length
     })

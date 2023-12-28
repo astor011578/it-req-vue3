@@ -133,7 +133,6 @@ export const useNewReqStore = defineStore('newRequest', {
           formData.append('files', file.raw)
         }
         const res = await uploadAttachedFiles(formData)
-        console.log(res)
         result = Object.assign([], res.data)
       }
       return result

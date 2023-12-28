@@ -76,6 +76,7 @@ export const useUserStore = defineStore('user', {
             }
             this.setUserId(userId)
             this.setRoles(roles)
+            console.log(this.roles)
             resolve(data)
           })
           .catch(error => {

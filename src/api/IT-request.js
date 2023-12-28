@@ -22,3 +22,12 @@ export const newRequest = (data) => {
     data
   })
 }
+
+export const getPendings = (reviewerId, status) => {
+  const basicUrl = `/requests/pendings/${reviewerId}`
+  const url = status ? `${basicUrl}?status=${status}` : basicUrl
+  return request({
+    method: 'get',
+    url
+  })
+}

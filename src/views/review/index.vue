@@ -36,9 +36,9 @@
         :column-config="{ resizable: true }"
         :tooltip-config="tableTooltips"
       >
-        <vxe-column field="ITno" title="IT #" width="90" sortable fixed="left">
+        <vxe-column field="reqNo" title="IT #" width="90" sortable fixed="left">
           <template #default="{ row }">
-            <a class="ce-link" :href="`#/detail/${row.ITno}`" target="_blank">{{ row.ITno }}</a>
+            <a class="ce-link" :href="`#/detail/${row.reqNo}`" target="_blank">{{ row.reqNo }}</a>
           </template>
         </vxe-column>
         <vxe-column field="category" :title="lang('Category')" width="110" sortable/>
@@ -56,14 +56,14 @@
         </vxe-column>
         <vxe-column field="action" :title="lang('Action')" width="105" header-align="center" align="center">
           <template #default="{ row }">
-            <Dialog v-if="row.category === 'Cancellation'" :no="row.ITno" :data="row" />
+            <Dialog v-if="row.category === 'Cancellation'" :no="row.reqNo" :data="row" />
             <el-button
               v-else-if="row.category === 'Reviewing'"
               :icon="Pen"
               type="info"
               plain
               class="p-2"
-              @click="toReviewNew(row.ITno, row.recipient[1])"
+              @click="toReviewNew(row.reqNo, row.recipient[1])"
             >
               {{ lang('Review') }}
             </el-button>
@@ -81,6 +81,7 @@
 </template>
 <script setup>
 import { ElMessage } from 'element-plus'
+import { getPendings } from '@/api/IT-request'
 import { useUserStore } from '@/store/user'
 import { lang } from '@/hooks/useCommon'
 import { Pen } from '@/icons/common/'
@@ -91,7 +92,7 @@ const tableData = ref([])
 const totalPage = ref(0)
 const loading = ref(false)
 const userStore = useUserStore()
-const isHighest = ref(false)    //user.roles 是否包含 'admin' 或 'manager'
+const isHighest = ref(false)    //user.roles 是否包含 'Administrator'
 
 /**
  * @description tooltips config
@@ -109,21 +110,20 @@ const tableTooltips = {
   }
 }
 
-//get IT-Requests which are pending for approval
+//get IT-requests which are pending for approval
 const queryData = async () => {
   loading.value = true
-  await axiosReq({
-    method: 'get',
-    url: `/pendings/${selected.value}/${userStore.username}/${isHighest.value}`
-  }).then((res) => {
-    tableData.value = res.data
-    totalPage.value = tableData.value.length
-  })
+  await getPendings(userStore.userId, selected.value)
+    .then(res => {
+      console.log(res.data)
+      tableData.value = res.data
+      totalPage.value = tableData.value.length
+    })
   setTimeout(() => loading.value = false, 1000)
 }
 
 onMounted(async () => {
-  isHighest.value = (userStore.roles.includes('admin') || userStore.roles.includes('manager')) ? true : false
+  isHighest.value = userStore.roles.includes('Administrator') ? true : false
   if (isHighest.value) {
     options.value.push(
       { value: 'total', label: 'Total' },
@@ -143,14 +143,15 @@ onMounted(async () => {
 const selected = ref('')   //default value
 const options = ref([])
 
-const toReviewNew = (ITno, recipientID) => {
-  if (recipientID === userStore.username) {
-    router.push({ path: `/review/new/${ITno}` })
+const toReviewNew = (reqNo, recipientId) => {
+  if (recipientId === userStore.userId) {
+    router.push({ path: `/review/new/${reqNo}` })
   } else {
     ElMessage.warning(lang('Permission denied'))
   }
 }
 </script>
+
 <style lang="scss" scoped>
 $outer-space: calc(var(--navbar-height) + 1rem * 2 + 24.38px + 24px * 2 + 1px * 2 + 14px);
 #revTable-container {

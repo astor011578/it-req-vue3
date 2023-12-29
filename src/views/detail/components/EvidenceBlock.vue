@@ -9,18 +9,18 @@
     </template>
     <div v-if="hasProperty(evidence)">
       <el-descriptions
-        v-for="(val, key) in evidence"
-        :key="key"
-        column="1"
-        border
+      v-for="(val, key) in evidence"
+      :key="key"
+      column="1"
+      border
       >
-        <template #title v-if="val.uploadFiles.length">
+        <template #title v-if="val.title">
           <div>
             <font-awesome-icon icon="fa-solid fa-paperclip" />
             {{ val.title }}
           </div>
         </template>
-        <el-descriptions-item v-if="val.uploadFiles.length" :label="lang('Status')">
+        <el-descriptions-item v-if="val.state" :label="lang('Status')">
           <el-tag v-if="val.state === 'Approved'" type="primary">
             {{ lang('Approved') }}
           </el-tag>
@@ -82,12 +82,13 @@ const prePath = `${import.meta.env.VITE_APP_BASE_URL}/uploads/${reqNo}`
 const imgExt = ['jpg', 'jpeg', 'gif', 'png', 'svg']
 
 onMounted(() => {
+  const type = store.getReqType
   const _evidence = store.getEvidence
   evidence.value = Object.assign({}, _evidence)
   for (const [key, val] of Object.entries(_evidence)) {
     const { uploadFiles, uploadReply } = val
     if (key === 'release' || key === 'monitor') {
-      if (!uploadFiles.length) break
+      if (type === 'OneTime') break
     }
     //get file extension
     if (uploadFiles.length) {
@@ -125,7 +126,9 @@ onMounted(() => {
       case 'UAT1': evidence.value[key].title = 'IT buyoff (UAT1)'; break;
       case 'UAT2': evidence.value[key].title = 'User buyoff (UAT2)'; break;
       case 'release': evidence.value[key].title = 'Release'; break;
-      case 'monitor': evidence.value[key].title = 'Monitor 1 lot'; break;
+      case 'monitor': {
+        evidence.value[key].title = 'Monitor 1 lot'; break;
+      }
     }
   }
 })

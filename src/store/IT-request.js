@@ -196,7 +196,6 @@ export const useITReqStore = defineStore('ITRequest', {
           throw 'missingArgumentError'
         }
       } catch (err) {
-        console.log(err)
         //如果是客製的 error message string
         const isCustomError = err.indexOf('status code ') === -1 ? true : false
         if (isCustomError) {

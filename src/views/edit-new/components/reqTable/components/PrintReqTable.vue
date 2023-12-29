@@ -22,9 +22,9 @@
 import * as XLSX from 'xlsx/xlsx.mjs'
 import { genFileId, ElMessage } from 'element-plus'
 import { lang } from '@/hooks/useCommon'
-import { useNewStore } from '@/store/addNew'
+import { useNewReqStore } from '@/store/new-request'
 const uploadRef = ref(null)   //綁定 el-upload
-const addNewStore = useNewStore()
+const addNewStore = useNewReqStore()
 const emits = defineEmits(['get-need-refresh'])
 //將 file 移出 file list 時觸發
 const removeTemplate = (files) => {
@@ -87,6 +87,7 @@ const readExcel = (files) => {
   reader.readAsArrayBuffer(file)
 }
 </script>
+
 <style scoped lang="scss">
 :deep(.el-upload) {
   margin: 4px 0;

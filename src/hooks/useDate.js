@@ -32,19 +32,24 @@ export const dateFormatter = (dateVal) => {
       break
     }
     default: {
-      return ''
+      break
     }
   }
 
-  let yyyy = before.getFullYear()
-  let mm = before.getMonth() + 1
-  let dd = before.getDate()
+  if (before) {
+    let yyyy = before.getFullYear()
+    let mm = before.getMonth() + 1
+    let dd = before.getDate()
 
-  return [
-    yyyy,
-    mm < 10 ? '0' + mm : mm,
-    dd < 10 ? '0' + dd : dd
-  ].join('/')
+    return [
+      yyyy,
+      mm < 10 ? '0' + mm : mm,
+      dd < 10 ? '0' + dd : dd
+    ].join('/')
+    
+  } else {
+    return ''
+  }
 }
 
 /**

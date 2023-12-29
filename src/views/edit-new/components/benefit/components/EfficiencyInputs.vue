@@ -36,8 +36,8 @@
 <script setup>
 import { lang } from '@/hooks/useCommon'
 import { ValidateText } from '@/components'
-import { useNewStore } from '@/store/addNew'
-const store = useNewStore()
+import { useNewReqStore } from '@/store/new-request'
+const store = useNewReqStore()
 const benefitType = ref('')       //儲存 benefit 類型
 
 //綁定 el-input-number 的數值
@@ -77,7 +77,7 @@ const setValidateString = async () => {
 const props = defineProps({ refreshCode: { type: Number, default: 0 } })
 
 //監聽父組件的 refreshCode 是否有改變, 有則刷新 benefitType 與 store 裡面的 validate
-watch(props, (newVal, oldVal) => {
+watch(props, (val) => {
   benefitType.value = store.getBenefitType
   setValidateString()
 })
@@ -91,6 +91,7 @@ const inputListener = async (value) => {
   await setValidateString()
 }
 </script>
+
 <style scoped lang="scss">
 #saving-time {
   list-style: none;

@@ -24,11 +24,11 @@
 <script setup>
 import { lang } from '@/hooks/useCommon'
 import { ValidateText } from '@/components'
-import { useNewStore } from '@/store/addNew'
+import { useNewReqStore } from '@/store/new-request'
 import { SelectMenu } from '@/components'
 //從父組件取得 refreshCode
 const props = defineProps({ refreshCode: { type: Number, default: 0 } })
-const store = useNewStore()
+const store = useNewReqStore()
 const benefitType = ref('')   //儲存 benefit 類型
 const selected = computed(() => { return store.getBenefit.qualityIssue })   //綁定選中的選項數值
 //用來渲染選單選項

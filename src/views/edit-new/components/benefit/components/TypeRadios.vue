@@ -9,8 +9,8 @@
 
 <script setup>
 import { lang } from '@/hooks/useCommon'
-import { useNewStore } from '@/store/addNew'
-const store = useNewStore()
+import { useNewReqStore } from '@/store/new-request'
+const store = useNewReqStore()
 const benefitType = ref('')     //綁定 el-radio 的值
 const emits = defineEmits([ 'get-need-refresh' ])
 const changeBenefitType = ($benefitType) => {

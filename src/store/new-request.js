@@ -2,9 +2,8 @@ import { defineStore } from 'pinia'
 import { ElMessage } from 'element-plus'
 import { lang } from '@/hooks/useCommon'
 import { getInfoReq, getUsersReq } from '@/api/user'
-import { newRequest } from '@/api/IT-request'
+import { getRequest, newRequest, editRequest, reviewRequest } from '@/api/IT-request'
 import { uploadAttachedFiles } from '@/api/upload'
-import axiosReq from '@/utils/axiosReq'
 import Application from './state/Application'
 import Validate from './state/ValidateString'
 const router = useRouter()
@@ -164,9 +163,10 @@ export const useNewReqStore = defineStore('newRequest', {
         return false
       }
     },
-    async reviewApplication(ITno, reviewResult, message) {
+    async reviewApplication(reqNo, reviewResult, message) {
       const { type, schedule } = this.application
-      const reviewInfo = { ITno, result: reviewResult }
+      const reviewInfo = { result: reviewResult }
+
       switch (reviewResult) {
         case 'Approved': {
           reviewInfo.type = type
@@ -183,16 +183,12 @@ export const useNewReqStore = defineStore('newRequest', {
       // console.log('reviewInfo: ', reviewInfo)
       // console.log('validate: ', this.validate)
       try {
-        const res = await axiosReq({
-          method: 'post',
-          url: '/request/review',
-          data: reviewInfo
-        })
+        const res = await reviewRequest(reqNo, reviewInfo)
         if (res?.code !== 200) {
           //拋出異常就會直接進入 catch 區塊中
           throw {
             type: 'HttpRequestError',
-            detail: `Error occured when sent HTTP request to server.`,
+            detail: `Error occured when sent HTTP request to server`,
             statusCode: res?.code,
             fullResponse: res
           }
@@ -200,6 +196,7 @@ export const useNewReqStore = defineStore('newRequest', {
         this.resetApplication()
         this.resetValidate()
         return true
+        
       } catch (err) {
         console.error(err)
         this.resetApplication()
@@ -207,36 +204,31 @@ export const useNewReqStore = defineStore('newRequest', {
         return false
       }
     },
-    async fetchApplication(ITno) {
+    async fetchApplication(reqNo) {
       let status
-      await axiosReq({
-        method: 'get',
-        url: `/request/${ITno}`,
-        isParams: true
-      })
+      await getRequest(reqNo)
         .then(res => {
           if (res.code === 200) {
-            const { reqr, reqrID, pgr, pgrID, benefitType, benefit } = res.data
-            const reqrInfo = {
-              name: reqr,
-              id: reqrID
-            }
-            this.setReqr(reqrInfo)
-            const pgrInfo = {
-              name: pgr,
-              id: pgrID
-            }
-            this.setPgr(pgrInfo)
+            const { reqrName, reqrId, pgrName, pgrId, benefitType, benefit } = res.data
+            this.setReqr({
+              name: reqrName,
+              id: reqrId
+            })
+            this.setPgr({
+              name: pgrName,
+              id: pgrId
+            })
             this.setBenefitType(benefitType)
-            const { qualityIssue, testerExp, onlineExp, offlineExp } = benefit
+            const { qualityIssue, testerSavingExp, onlineSavingExp, offlineSavingExp } = benefit
             this.setQualityIssue(qualityIssue)
             const savingTimes = {
-              tester: testerExp,
-              onlineStaff: onlineExp,
-              offlineStaff: offlineExp
+              tester: testerSavingExp,
+              onlineStaff: onlineSavingExp,
+              offlineStaff: offlineSavingExp
             }
             this.setSavingTimes(savingTimes)
-            const { reqName, stage, customer, device, tester, equipment, system, purpose, plant, attachedFiles } = res.data
+            const { reqTable, attachedFiles } = res.data
+            const { reqName, stage, customer, device, tester, equipment, system, purpose, plant } = reqTable
             const reqTableData = { reqName, stage, customer, device, tester, equipment, system, purpose }
             this.setPlant(plant)
             this.setReqTable(reqTableData)
@@ -245,21 +237,19 @@ export const useNewReqStore = defineStore('newRequest', {
           status = res.data.status
         })
         .catch(error => {
-          ElMessage.error(`IT #${ITno} ${lang('data not found')}`)
+          ElMessage.error(`IT #${reqNo} ${lang('data not found')}`)
           router.push('/404')
         })
       return status === 'Returned'
     },
-    async editApplication(ITno) {
+    async editApplication(reqNo) {
       //for debugging
       // console.log('application: ', this.application)
       // console.log('validate: ', this.validate)
       try {
-        const res = await axiosReq({
-          method: 'patch',
-          url: `/request/edit`,
-          data: { ITno, ...this.application }
-        })
+        const attachedFiles = await this.uploadAttachedFiles()
+        this.application.attachedFiles = Object.assign([], attachedFiles)
+        const res = await editRequest(reqNo, this.application)
         if (res?.code !== 200) {
           //拋出異常就會直接進入 catch 區塊中
           throw {
@@ -272,8 +262,8 @@ export const useNewReqStore = defineStore('newRequest', {
         this.resetApplication()
         this.resetValidate()
         return true
+
       } catch (err) {
-        console.error(err)
         this.resetApplication()
         this.resetValidate()
         return false
@@ -309,7 +299,7 @@ export const useNewReqStore = defineStore('newRequest', {
     async checkIllegalDate() {
       try {
         const requestType = this.application.type
-        const isIllegals = await isIllegal(requestType, this.application.schedule)
+        const isIllegals = isIllegal(requestType, this.application.schedule)
         // console.log(isIllegals)
   
         //提供 warningString mapping 日期標題用

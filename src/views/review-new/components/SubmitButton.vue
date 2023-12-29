@@ -58,7 +58,7 @@ const notApprove = (result) => {
 const validateInputs = async () => {
   await newReqStore.checkEmpty(true)
   await newReqStore.checkIllegalDate()
-  const validates = await newReqStore.getValidate
+  const validates = newReqStore.getValidate
   let isPass = false    //是否所有欄位都通過輸入驗證
   for await (const [key, val] of Object.entries(validates.schedule)) {
     isPass = val !== '' ? false : true

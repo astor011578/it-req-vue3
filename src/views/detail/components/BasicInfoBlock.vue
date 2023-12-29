@@ -22,7 +22,7 @@
         <el-descriptions-item :label="lang('Requester')">{{ basicInfo.reqrName }}</el-descriptions-item>
         <el-descriptions-item :label="lang('IT')">{{ basicInfo.pgrName }}</el-descriptions-item>
         <el-descriptions-item :label="lang('Issue date')">{{ dateFormatter(basicInfo.issueDate) }}</el-descriptions-item>
-        <el-descriptions-item :label="lang('Approve date')">
+        <el-descriptions-item :label="lang('Review date')">
           <span v-if="basicInfo.review.date">{{ dateFormatter(basicInfo.review.date) }}</span>
           <span v-else class="ce-gray-color-italic">N/A</span>
         </el-descriptions-item>

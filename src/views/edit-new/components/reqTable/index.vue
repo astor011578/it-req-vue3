@@ -19,23 +19,23 @@
       <el-form-item :label="lang('Attached files')">
         <span style="width: 100%; margin: 8px;">
           <span style="margin-bottom: 8px;">{{ lang('Uploaded files') }}</span><br>
-          <div v-if="!attachFiles.length" class="ce-gray-color-italic attachFiles-container">
+          <div v-if="!attachedFiles.length" class="ce-gray-color-italic attachedFiles-container">
             {{ lang('There is no file attached') }}
           </div>
           <div
-            v-for="(file, index) in attachFiles"
+            v-for="(file, index) in attachedFiles"
             :key="index"
-            class="attachFiles-container"
+            class="attachedFiles-container"
           >
             <a
               class="ce-link"
-              :href="prePath + file.filename"
-              :download="ITno + '_attachment_' + file.originalname"
+              :href="prePath + file.fileName"
+              :download="reqNo + '_attachment_' + file.originalName"
               target="_blank"
             >
               <div class="inline-flex">
                 <File class="mr-1" />
-                {{ file.originalname }}
+                {{ file.originalName }}
               </div>
             </a>
           </div>
@@ -54,8 +54,7 @@
           v-if="showUploadFiles"
           :size="size"
           :plain="plain"
-          :upload-to="uploadTo"
-          @get-children="getAttachFiles"
+          @get-children="getAttachedFiles"
         />
       </el-form-item>
     </div>
@@ -67,26 +66,21 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { File } from '@/icons/common/'
 import { lang } from '@/hooks/useCommon'
 import { UploadFiles } from '@/components'
-import { useNewStore } from '@/store/addNew'
+import { useNewReqStore } from '@/store/new-request'
 import { Notice, PrintReqTable, ManualReqTable, PlantRadios } from './components'
-const store = useNewStore()
-const refreshCode = ref(0)    //提供子組件判斷是否需要重新向 store 取值
-const prePath = `${import.meta.env.VITE_APP_BASE_URL}/files/attachment/`
-const ITno = useRoute().params.ITno
-const attachFiles = computed(() => { return store.getAttachFiles })   //儲存附件的資訊
+const store = useNewReqStore()
+const refreshCode = ref(0)      //提供子組件判斷是否需要重新向 store 取值
+const prePath = `${import.meta.env.VITE_APP_BASE_URL}/uploads/attached_files/`
+const reqNo = useRoute().params.reqNo
+const attachedFiles = ref([])   //儲存附件的資訊
 //UploadFiles 組件變數
 const size = 'small'
 const plain = true
-const uploadTo = 'attachment'
 //取得子組件傳來的 needRefresh
 const getNeedRefresh = (needRefresh) => { if (needRefresh) refreshCode.value++ }
 //從子組件 UploadFiles.vue 中取得附件資訊
-const getAttachFiles = async ($attachFiles) => {
-  for await (const file of $attachFiles) {
-    const { path, filename, originalname } = file
-    attachFiles.value.push({ path, filename, originalname })
-  }
-  store.setAttachFiles(attachFiles.value)
+const getAttachedFiles = async ($attachedFiles) => {
+  store.setAttachedFiles($attachedFiles)
 }
 const showUploadFiles = ref(false)
 const uploadAgain = () => {
@@ -103,15 +97,19 @@ const uploadAgain = () => {
     .then(() => showUploadFiles.value = true )
     .catch(() => ElMessage.info(lang('Action cancelled')))
 }
-//儲存 attachFiles 預設值到 store 中
-onMounted(() => store.setAttachFiles(attachFiles.value))
+//儲存 attachedFiles 預設值到 store 中
+onMounted(() => {
+  attachedFiles.value = store.getAttachedFiles
+  store.setAttachedFiles(attachedFiles.value)
+})
 </script>
+
 <style lang="scss" scoped>
 a {
   width: 100%;
   line-height: 24px;
 }
-.attachFiles-container {
+.attachedFiles-container {
   margin-bottom: 0.25rem;
 }
 </style>

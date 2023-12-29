@@ -55,7 +55,7 @@
             </span>
           </template>
         </vxe-column>
-        <vxe-column field="approveDate" :title="lang('Approve date')" width="115" sortable>
+        <vxe-column field="approveDate" :title="lang('Review date')" width="115" sortable>
           <template #default="{ row }">
             <span v-if="row.approveDate === ''" class="ce-gray-color-italic">N/A</span>
             <span v-else>{{ row.approveDate }}</span>

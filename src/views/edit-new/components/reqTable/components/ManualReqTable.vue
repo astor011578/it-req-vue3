@@ -26,8 +26,8 @@
 <script setup>
 import { lang } from '@/hooks/useCommon'
 import { ValidateText } from '@/components'
-import { useNewStore } from '@/store/addNew'
-const addNewStore = useNewStore()
+import { useNewReqStore } from '@/store/new-request'
+const addNewStore = useNewReqStore()
 const reqTable = ref({})    //綁定各個 el-input 裡的值
 const props = defineProps({ refreshCode: { type: Number, default: 0 } })
 //渲染表單輸入項用

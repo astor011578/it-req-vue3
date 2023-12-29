@@ -36,7 +36,7 @@ const requestType = ref('')       //需求類型
 const formInputs = ref({})        //渲染表單用
 //綁定 el-date-picker 的值
 const schedule = ref({
-  turnOn: '',
+  turnOnDate: '',
   UAT1: '',
   UAT2: '',
   release: '',
@@ -56,9 +56,9 @@ watch(props, async (newVal, oldVal) => {
 
 //formInputs 的數值會根據需求類型作更動
 const setFormInputs = async () => {
-  requestType.value = await store.getRequestType
+  requestType.value = store.getRequestType
   formInputs.value = {
-    turnOn: { label: 'Start coding date' },
+    turnOnDate: { label: 'Start coding date' },
     UAT1: { label: 'Test-IT buyoff (UAT1)' },
     UAT2: { label: 'User buyoff (UAT2)' }
   }
@@ -78,17 +78,17 @@ const setFormInputs = async () => {
 
 //複用程式碼: 儲存 schedule 的值到 store 中
 const setSchedule = () => {
-  const { turnOn, UAT1, UAT2, release, monitor } = schedule.value
+  const { turnOnDate, UAT1, UAT2, release, monitor } = schedule.value
   if (requestType.value === 'OneTime') {
     store.setSchedule({
-      turnOn,
+      turnOnDate,
       UAT1,
       UAT2,
       release: '',
       monitor: ''
     })
   } else {
-    store.setSchedule({ turnOn, UAT1, UAT2, release, monitor })
+    store.setSchedule({ turnOnDate, UAT1, UAT2, release, monitor })
   }
 }
 </script>

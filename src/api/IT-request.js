@@ -23,6 +23,22 @@ export const newRequest = (data) => {
   })
 }
 
+export const reviewRequest = (reqNo, data) => {
+  return request({
+    method: 'patch',
+    url: `/request/review/${reqNo}`,
+    data
+  })
+}
+
+export const editRequest = (reqNo, data) => {
+  return request({
+    method: 'patch',
+    url: `/request/edit/${reqNo}`,
+    data
+  })
+}
+
 export const getPendings = (reviewerId, status) => {
   const basicUrl = `/requests/pendings/${reviewerId}`
   const url = status ? `${basicUrl}?status=${status}` : basicUrl

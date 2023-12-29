@@ -13,9 +13,9 @@
 <script setup>
 import { ElMessage, ElLoading } from 'element-plus'
 import { lang } from '@/hooks/useCommon'
-import { useNewStore } from '@/store/addNew'
-const store = useNewStore()
-const ITno = useRoute().params.ITno
+import { useNewReqStore } from '@/store/new-request'
+const store = useNewReqStore()
+const reqNo = useRoute().params.reqNo
 const router = useRouter()
 const loading = ref(false)    //是否啟用 loading 效果
 
@@ -37,7 +37,7 @@ const iterateValidates = async () => {
       isPass = innerVal !== '' ? false : true
       if (innerVal !== '') {
         switch (innerKey) {
-          case 'pg': {
+          case 'pgr': {
             window.scrollTo({ top: 0, behavior: 'smooth' })
             break
           }
@@ -66,7 +66,7 @@ const iterateValidates = async () => {
             window.scrollTo({ top: scrollHeight, behavior: 'smooth' })
             break
           }
-          case 'turnOn':
+          case 'turnOnDate':
           case 'UAT1':
           case 'UAT2': {
             break
@@ -102,7 +102,7 @@ const submit = async () => {
     background: 'rgba(168, 171, 178, 0.3)'
   })
   setTimeout(async () => {
-    const isSuccess = await store.editApplication(ITno)
+    const isSuccess = await store.editApplication(reqNo)
     if (isSuccess) {
       ElMessage.success(lang('Edit a IT-Request successfully'))
       router.replace({ path: '/tables' })
@@ -115,6 +115,7 @@ const submit = async () => {
   }, 2000)
 }
 </script>
+
 <style scoped lang="scss">
 :deep(.el-col) {
   margin: auto;

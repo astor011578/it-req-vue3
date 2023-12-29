@@ -19,21 +19,22 @@
 <script setup>
 import { FullLoading } from '@/components'
 import { CoreTeamBlock, BenefitBlock, ReqTableBlock, SubmitButton } from './components'
-import { useNewStore } from '@/store/addNew'
+import { useNewReqStore } from '@/store/new-request'
 import { useUserStore } from '@/store/user'
 const router = useRouter()
-const store = useNewStore()
+const store = useNewReqStore()
 const loading = ref(false)
 onMounted(async () => {
   loading.value = true
-  const isReturned = await store.fetchApplication(useRoute().params.ITno)
-  const username = useUserStore().username
-  const isReqr = useNewStore().application.coreTeam.reqr[1] === username ? true : false
+  const isReturned = await store.fetchApplication(useRoute().params.reqNo)
+  const userId = useUserStore().userId
+  const isReqr = store.application.coreTeam.reqr.id === userId ? true : false
   const permission = isReqr && isReturned ? true : false
   loading.value = false
   if (!permission) router.push({ path: '/401', replace: true })
 })
 </script>
+
 <style lang="scss">
 $input-w-relative: 100%;
 $input-w-absolute: 300px;

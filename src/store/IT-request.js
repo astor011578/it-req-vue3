@@ -162,25 +162,29 @@ export const useITReqStore = defineStore('ITRequest', {
                   uploadFiles: UAT1Logs?.uploadFiles,
                   uploadReply: UAT1Logs?.result,
                   updateDate: UAT1Logs?.updateDate,
-                  reviewDate: UAT1Logs?.reviewDate
+                  reviewDate: UAT1Logs?.reviewDate,
+                  comments: UAT1Logs?.comments
                 },
                 UAT2: {
                   uploadFiles: UAT2Logs?.uploadFiles,
                   uploadReply: UAT2Logs?.result,
                   updateDate: UAT2Logs?.updateDate,
-                  reviewDate: UAT2Logs?.reviewDate
+                  reviewDate: UAT2Logs?.reviewDate,
+                  comments: UAT2Logs?.comments
                 },
                 release: {
                   uploadFiles: releaseLogs?.uploadFiles,
                   uploadReply: releaseLogs?.result,
                   updateDate: releaseLogs?.updateDate,
-                  reviewDate: releaseLogs?.reviewDate
+                  reviewDate: releaseLogs?.reviewDate,
+                  comments: releaseLogs?.comments
                 },
                 monitor: {
                   uploadFiles: monitorLogs?.uploadFiles,
                   uploadReply: monitorLogs?.result,
                   updateDate: monitorLogs?.updateDate,
-                  reviewDate: monitorLogs?.reviewDate
+                  reviewDate: monitorLogs?.reviewDate,
+                  comments: monitorLogs?.comments
                 }
               }
               //get current proceeding step

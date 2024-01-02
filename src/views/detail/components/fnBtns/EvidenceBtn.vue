@@ -24,10 +24,18 @@
       <UploadFiles
         :size="size"
         :plain="plain"
-        :upload-to="uploadTo"
         :step="step"
         @get-children="getUploads"
       />
+      <div class="ce-dialog-footer-btn">
+        <el-button
+          type="primary"
+          :disabled="disabledButton"
+          @click="submitEvidence(showBenefitDialog ? true : false)"
+        >
+          {{ lang('Upload to server') }}
+        </el-button>
+      </div>
     </el-dialog>
     <!-- Benefit dialog -->
     <el-dialog
@@ -64,7 +72,7 @@
         <el-table-column align="center" :label="lang('Actual benefit')">
           <template #default="scope">
             <el-input
-              v-model="actualBenefit[`${scope.row.key}Act`]"
+              v-model="actualBenefit[`${scope.row.key}SavingAct`]"
               type="number"
               step="0.1"
               min="0"
@@ -87,77 +95,92 @@
     </el-dialog>
   </span>
 </template>
+
 <script setup>
 import { ElMessage } from 'element-plus'
 import { UploadFiles } from '@/components'
+import { uploadEvidence } from '@/api/upload'
+import { updateEvidence, updateBenefit } from '@/api/IT-request'
 import { useITReqStore } from '@/store/IT-request'
 import { hasProperty } from '@/hooks/useValidate'
-import { dateGenerator } from '@/hooks/useDate'
 import { lang } from '@/hooks/useCommon'
-import axiosReq from '@/utils/axiosReq'
 const props = defineProps({
   icon: { type: Object, required: true },
   tip: { type: String, required: true }
 })
 const store = ref({})
-const uploadTo = 'evidence'
 const size = 'large'
 const plain = false
 const router = useRouter()
 const permission = ref(false)
 const reqNo = useRoute().params.reqNo
 const step = ref('')
+const disabledButton = ref(false)
 const reqType = shallowRef('')
+const evidences = ref([])             //要上傳的證明
+const aboutToClose = ref(false)       //是否即將要結案
+const benefitLoading = ref(false)     //benefit dialog 中的 loading
+const showUploadDialog = ref(false)   //是否顯示上傳證明的 dialog 框
+const showBenefitDialog = ref(false)  //是否顯示更新 actual benefit 的 dialog 框
 const benefitType = shallowRef('')
 const benefitTableInfo = shallowRef([])
 const actualBenefit = ref({})
-const aboutToClose = ref(false)       //是否即將要結案
-const benefitLoading = ref(false)     //benefit dialog 中的 loading
-const uploadedEvidence = ref({})      //已上傳的證明
-const showUploadDialog = ref(false)   //是否顯示上傳證明的 dialog 框
-const showBenefitDialog = ref(false)  //是否顯示更新 actual benefit 的 dialog 框
 
 //取得子組件傳回的上傳證明資訊 (UploadFiles.vue)
-const getUploads = async (uploads) => {
-  if (uploads.length) {
-    let uploadFiles = []
-    uploads.forEach((upload) => {
-      uploadFiles.push({
-        path: upload.path,
-        filename: upload.filename,
-        originalname: upload.originalname
-      })
-    })
-
-    let today = dateGenerator()
-    uploadedEvidence.value = {
-      step: step.value,
-      updateDate: today,
-      uploadFiles: uploadFiles
-    }
+const getUploads = async (files) => {
+  evidences.value = Object.assign([], files)
+  if (evidences.value.length) {
     if (aboutToClose.value && benefitType.value !== '') {
       showBenefitDialog.value = true
-    } else {
-      await submitEvidence(uploadedEvidence.value)
     }
   }
 }
 
 //提交上傳證明的資訊到服務端
-const submitEvidence = async (requestData) => {
-  axiosReq({
-    method: 'patch',
-    url: `/evidence/${reqNo}`,
-    data: requestData
-  })
-    .then(() => {
-      setTimeout(() => {
-        router.push('/reload')
-      }, 1500)
-    })
-    .catch(() => {
-      ElMessage.error(lang('Failed to upload files'))
-    })
+const submitEvidence = async (waitingUpdateBenefit) => {
+  disabledButton.value = true
+  if (!waitingUpdateBenefit) {
+    let result = []
+    if (evidences.value.length) {
+      const formData = new FormData()
+      for await (const file of evidences.value) {
+        formData.append('files', file.raw)
+      }
+      const res = await uploadEvidence(formData, reqNo, step.value)
+      result = Object.assign([], res.data)
+    } else {
+      ElMessage.info(lang('No files selected'))
+      return disabledButton.value = false
+    }
+
+    if (result.length) {  
+      let uploadFiles = []
+      result.forEach((resultFile) => {
+        const { fileName, originalName } = resultFile
+        uploadFiles.push({ fileName, originalName })
+      })
+
+      const requestData = {
+        step: step.value,
+        updateDate: new Date(),
+        uploadFiles
+      }
+
+      await updateEvidence(reqNo, requestData)
+        .then(() => {
+          setTimeout(() => {
+            ElMessage.success(lang('Upload to server successfully'))
+            router.push('/reload')
+          }, 1500)
+        })
+        .catch(() => {
+          ElMessage.error(lang('Failed to upload files'))
+          disabledButton.value = false
+        })
+    } else {
+      disabledButton.value = false
+    }
+  }
 }
 
 //提交 actual benefit 到服務端
@@ -170,11 +193,7 @@ const submitBenefit = async () => {
     actualBenefit.value[key] = stringToFloat(value)
   }
 
-  await axiosReq({
-    method: 'patch',
-    url: `/benefit?no=${reqNo}`,
-    data: actualBenefit.value
-  })
+  await updateBenefit(reqNo, actualBenefit.value)
     .then(() => ElMessage.success(lang('Update the actual benefit successfully')))
     .catch(() => ElMessage.error(lang('Failed to update the actual benefit')))
 
@@ -183,7 +202,7 @@ const submitBenefit = async () => {
     showBenefitDialog.value = false
   }, 1000)
 
-  await submitEvidence(uploadedEvidence.value)
+  await submitEvidence()
 }
 
 onMounted(() => store.value = useITReqStore())
@@ -192,21 +211,22 @@ watch(store, async (val) => {
   const _benefit = await store.value.getBenefit
   step.value = await store.value.getSimpleStep
 
-  console.log(permission.value)
-
   if (hasProperty(_benefit)) {
-    const { offlineExp, onlineExp, testerExp, offlineAct, onlineAct, testerAct } = _benefit
+    const {
+      offlineSavingExp, onlineSavingExp, testerSavingExp,
+      offlineSavingAct, onlineSavingAct, testerSavingAct
+    } = _benefit
     reqType.value = _benefit.reqType
     benefitType.value = _benefit.benefitType
 
-    benefitTableInfo.value.push({ key: 'tester', title: 'Save tester time', exp: testerExp })
-    benefitTableInfo.value.push({ key: 'online', title: 'Save online staff time', exp: onlineExp })
-    benefitTableInfo.value.push({ key: 'offline', title: 'Save offline staff time', exp: offlineExp })
+    benefitTableInfo.value.push({ key: 'tester', title: 'Save tester time', exp: testerSavingExp })
+    benefitTableInfo.value.push({ key: 'online', title: 'Save online staff time', exp: onlineSavingExp })
+    benefitTableInfo.value.push({ key: 'offline', title: 'Save offline staff time', exp: offlineSavingExp })
 
     actualBenefit.value = {
-      offlineAct: offlineAct === 0 ? offlineExp : offlineAct,
-      onlineAct: onlineAct === 0 ? onlineExp : onlineAct,
-      testerAct: testerAct === 0 ? testerExp : testerAct
+      offlineSavingAct: offlineSavingAct === 0 ? offlineSavingExp : offlineSavingAct,
+      onlineSavingAct: onlineSavingAct === 0 ? onlineSavingExp : onlineSavingAct,
+      testerSavingAct: testerSavingAct === 0 ? testerSavingExp : testerSavingAct
     }
   
     switch (reqType.value) {

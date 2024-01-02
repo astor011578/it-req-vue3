@@ -7,6 +7,15 @@ export const getRequests = (status) => {
   })
 }
 
+export const getPendings = (reviewerId, status) => {
+  const basicUrl = `/requests/pendings/${reviewerId}`
+  const url = status ? `${basicUrl}?status=${status}` : basicUrl
+  return request({
+    method: 'get',
+    url
+  })
+}
+
 export const getRequest = (reqNo) => {
   return request({
     method: 'get',
@@ -39,11 +48,27 @@ export const editRequest = (reqNo, data) => {
   })
 }
 
-export const getPendings = (reviewerId, status) => {
-  const basicUrl = `/requests/pendings/${reviewerId}`
-  const url = status ? `${basicUrl}?status=${status}` : basicUrl
+//以下與更新 IT-request 的功能有關
+export const updateEvidence = (reqNo, data) => {
   return request({
-    method: 'get',
-    url
+    method: 'patch',
+    url: `request/evidence/${reqNo}`,
+    data
+  })
+}
+
+export const approveEvidence = (reqNo, data) => {
+  return request({
+    method: 'patch',
+    url: `request/approve/${reqNo}`,
+    data
+  })
+}
+
+export const updateBenefit = (reqNo, data) => {
+  return request({
+    method: 'patch',
+    url: `request/actual-benefit/${reqNo}`,
+    data
   })
 }

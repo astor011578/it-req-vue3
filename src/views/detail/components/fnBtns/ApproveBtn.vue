@@ -28,21 +28,21 @@
         border
       >
         <el-descriptions-item :label="lang('Upload date')">
-          {{ evidence.upload_date }}
+          {{ dateFormatter(evidence.updateDate) }}
         </el-descriptions-item>
         <el-descriptions-item :label="lang('Evidence')">
           <div
-            v-for="(file, index) in evidence.upload_files"
+            v-for="(file, index) in evidence.uploadFiles"
             :key="index"
           >
             <a
               class="ce-link"
               target="_blank"
-              :href="`${prePath}/${step}/${file.filename}`"
-              :download="file.originalname"
+              :href="`${prePath}/${step}/${file.fileName}`"
+              :download="file.originalName"
             >
               <File class="mr-1" />
-              {{ file.originalname }}
+              {{ file.originalName }}
             </a>
           </div>
         </el-descriptions-item>
@@ -83,8 +83,9 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { File } from '@/icons/common/'
 import { useITReqStore } from '@/store/IT-request'
+import { approveEvidence } from '@/api/IT-request'
 import { hasProperty } from '@/hooks/useValidate'
-import { dateGenerator } from '@/hooks/useDate'
+import { dateFormatter } from '@/hooks/useDate'
 import { lang } from '@/hooks/useCommon'
 const props = defineProps({
   icon: { type: Object, required: true },
@@ -103,22 +104,19 @@ const showBenefit = ref(false)    //是否要顯示 benefit (最後一個步驟�
 const showDialog = ref(false)     //save state of dialog
 const actualBenefit = ref({})
 
-const approve = () => {
-  reqData.value.upload_reply[1] = 'Approve'
+const approve = async () => {
+  reqData.value.reviewerReply.result = 'Approved'
   loading.value = true
-  setTimeout(() => {
-    axiosReq({
-      method: 'patch',
-      url: `/approve?no=${reqNo}`,
-      data: reqData.value
-    }).then(() => {
-      ElMessage.success(lang('Approve evidence successfully'))
-      router.push('/reload')
-    })
+  setTimeout(async () => {
+    await approveEvidence(reqNo, reqData.value)
+      .then(() => {
+        ElMessage.success(lang('Approve evidence successfully'))
+        router.push('/reload')
+      })
   }, 2000)
 }
 
-const reject = () => {
+const reject = async () => {
   ElMessageBox.prompt(lang('Please leave a reason for rejection'), lang('Reject evidence'), {
     confirmButtonText: lang('Submit'),
     cancelButtonText: lang('Cancel'),
@@ -127,20 +125,17 @@ const reject = () => {
     buttonSize: 'small'
   })
     .then(({ value, action }) => {
-      reqData.value.upload_reply[1] = 'Reject'
-      reqData.value.upload_reply[2] = value
+      reqData.value.reviewerReply.result = 'Rejected'
+      reqData.value.reviewerReply.comments = value
       loading.value = true
 
-      setTimeout(() => {
-        axiosReq({
-          method: 'patch',
-          url: `/approve?no=${reqNo}`,
-          data: reqData.value
-        }).then(() => {
-          loading.value = false
-          ElMessage.success(lang('Reject evidence successfully'))
-          router.push('/reload')
-        })
+      setTimeout(async () => {
+        await approveEvidence(reqNo, reqData.value)
+          .then(() => {
+            loading.value = false
+            ElMessage.success(lang('Reject evidence successfully'))
+            router.push('/reload')
+          })
       }, 2000)
     })
     .catch(() => {
@@ -152,26 +147,26 @@ const reject = () => {
 }
 
 onMounted(() => store.value = useITReqStore())
-watch(store, async (val) => {
+watch(store, async () => {
   permission.value = await store.value.getPermission.approve
   step.value = await store.value.getSimpleStep
   const _evidence = await store.value.getEvidence
   const _benefit = await store.value.getBenefit
-  const { reqType, offlineAct, onlineAct, testerAct } = _benefit
-  const replyDate = dateGenerator()
+  const { reqType, offlineSavingAct, onlineSavingAct, testerSavingAct } = _benefit
+  const reviewDate = new Date()
 
   if (step.value.length && hasProperty(_evidence)) {
     if (step.value !== 'Done' && step.value !== 'Cancel') {
       //要顯示在 dialog 表格中的資料
       evidence.value = {
-        upload_date: _evidence[step.value].upload_date,
-        upload_files: Object.assign({}, _evidence[step.value].upload_files)
+        updateDate: _evidence[step.value].updateDate,
+        uploadFiles: Object.assign({}, _evidence[step.value].uploadFiles)
       }
   
       //之後會被傳到服務端的 request data
       reqData.value = {
         step: step.value,
-        upload_reply: [replyDate, '', '']
+        reviewerReply: { reviewDate }
       }
   
       //取得需求類型
@@ -186,9 +181,9 @@ watch(store, async (val) => {
   
       //取得實際效益 (actual benefit) 的值
       actualBenefit.value = {
-        tester: { title: 'Save tester time', value: testerAct },
-        online: { title: 'Save online staff time', value: onlineAct },
-        offline: { title: 'Save offline staff time', value: offlineAct }
+        tester: { title: 'Save tester time', value: testerSavingAct },
+        online: { title: 'Save online staff time', value: onlineSavingAct },
+        offline: { title: 'Save offline staff time', value: offlineSavingAct }
       }
       
       //for debugging
@@ -199,6 +194,7 @@ watch(store, async (val) => {
   }
 })
 </script>
+
 <style scoped lang="scss">
 a {
   display: inline-flex;

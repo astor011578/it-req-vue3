@@ -3,7 +3,6 @@ import { ElMessage } from 'element-plus'
 import { useUserStore } from '@/store/user'
 import { hasProperty } from '@/hooks/useValidate'
 import { lang } from '@/hooks/useCommon'
-import axiosReq from '@/utils/axiosReq'
 import { getRequest } from '@/api/IT-request'
 const router = useRouter()
 
@@ -304,7 +303,13 @@ const scheduleHandler = (resource, stage, status) => {
     }
   }
 
-  output.KPI = Object.assign({}, resource.KPI[stage])
-
+  if (hasProperty(resource.KPI[stage])) {
+    output.KPI = Object.assign({}, resource.KPI[stage])
+  } else {
+    output.KPI = {
+      reschedule: 0,
+      delay: 0
+    }
+  }
   return output
 }

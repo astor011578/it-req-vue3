@@ -44,7 +44,7 @@
             <span class="mt-2">
               <div class="schedule-details">
                 <div>{{ lang('Actual date') }}:</div>
-                <div v-if="val.act !== ''" class="ce-blue-color ce-text-bold">
+                <div v-if="val.act" class="ce-blue-color ce-text-bold">
                   {{ dateFormatter(val.act) }}
                 </div>
                 <div v-else>

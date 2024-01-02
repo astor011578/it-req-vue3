@@ -236,7 +236,7 @@ export default {
     'Approve this IT-Request': '簽閱此需求',
     'Edit this IT-Request': '修改此需求內容',
     'Basic Info': '基本資訊',
-    'Review comments': '退件 / 拒件原因',
+    'Review comments': '退件 / 拒絕原因',
     'Scope': '影響範圍',
     'Schedule': '需求時程',
     'Rejected,': '已被退回',

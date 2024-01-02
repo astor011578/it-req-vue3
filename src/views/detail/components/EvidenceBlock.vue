@@ -29,14 +29,14 @@
           </span>
         </el-descriptions-item>
         <el-descriptions-item v-if="val.uploadReply === 'Rejected'" :label="lang('Rejection message')" >
-          <span v-if="!val.uploadReply" class="ce-gray-color-italic">
+          <span v-if="!val.comments" class="ce-gray-color-italic">
             {{ lang('There is no comments') }}
           </span>
           <span v-else>
-            {{ val.uploadReply }}
+            {{ val.comments }}
           </span>
         </el-descriptions-item>
-        <el-descriptions-item v-if="val.uploadFiles.length" :label="lang('Last review date')">
+        <el-descriptions-item v-if="val.uploadReply && val.uploadReply !== 'Reviewing'" :label="lang('Last review date')">
           {{ dateFormatter(val.reviewDate) }}
         </el-descriptions-item>
         <el-descriptions-item v-if="val.uploadFiles.length" :label="lang('Last update date')">

@@ -9,11 +9,10 @@ export const uploadAttachedFiles = (data) => {
   })
 }
 
-export const uploadEvidence = (data, reqNo) => {
-  console.log(data)
+export const uploadEvidence = (data, reqNo, step) => {
   return request({
     method: 'post',
-    url: `/upload/evidence?reqNo=${reqNo}`,
+    url: `/upload/evidence?reqNo=${reqNo}&step=${step}`,
     data,
     isUploadFile: true
   })

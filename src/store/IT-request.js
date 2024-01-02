@@ -67,7 +67,6 @@ export const useITReqStore = defineStore('ITRequest', {
           break
         }
       }
-
       switch (uploadStatus[step]) {
         case 'Unuploaded':
         case 'Rejected': {
@@ -117,6 +116,7 @@ export const useITReqStore = defineStore('ITRequest', {
     setReqNo(reqNo) {
       this.reqNo = reqNo
     },
+
     async getITReqInfo() {
       try {
         if (this.reqNo.length) {
@@ -184,11 +184,11 @@ export const useITReqStore = defineStore('ITRequest', {
                 }
               }
               //get current proceeding step
-              switch ('Unuploaded') {
-                case uploadStatus.UAT1: this.step = 'UAT1'; break;
-                case uploadStatus.UAT2: this.step = 'UAT2'; break;
-                case uploadStatus.release: this.step = 'release'; break;
-                case uploadStatus.monitor: this.step = 'monitor'; break;
+              switch (true) {
+                case uploadStatus.UAT1 !== 'Approved': this.step = 'UAT1'; break;
+                case uploadStatus.UAT2 !== 'Approved': this.step = 'UAT2'; break;
+                case uploadStatus.release !== 'Approved': this.step = 'release'; break;
+                case uploadStatus.monitor !== 'Approved': this.step = 'monitor'; break;
                 default: this.step = status; break;
               }
             })

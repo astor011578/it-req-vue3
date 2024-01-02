@@ -91,7 +91,7 @@ a.ce-link {
   width: 100%;
   text-align: center;
   padding: var(--el-dialog-padding-primary);
-  padding-top: calc(var(--el-dialog-padding-primary) + 6px);
+  padding-top: calc(var(--el-dialog-padding-primary));
   padding-bottom: calc(var(--el-dialog-padding-primary) - 6px);
 }
 

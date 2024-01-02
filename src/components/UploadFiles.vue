@@ -30,7 +30,6 @@
 import { ElMessage } from 'element-plus'
 import { UploadCloud, Loading } from '@/icons/common'
 import { lang } from '@/hooks/useCommon'
-const reqNo = useRoute().params.reqNo
 let loading = ref(false)
 let size = ref('')
 let plain = ref(true)
@@ -44,10 +43,6 @@ const props = defineProps({
   },
   plain: {
     type: Boolean
-  },
-  uploadTo: {
-    type: String,
-    required: true
   },
   step: {
     type: String,
@@ -110,9 +105,11 @@ const uploadChange = (file, files) => {
     } else {
       fileList.value = JSON.parse(JSON.stringify(files))
       uploadList.value.push(file)
-      emits('get-children', uploadList.value)
     }
+  } else {
+    uploadList.value = []
   }
+  emits('get-children', uploadList.value)
 }
 
 //upload on-remove handler
@@ -141,7 +138,6 @@ const uploadRemove = (file, files) => {
 
   .el-upload__tip {
     text-align: center;
-    margin-bottom: 0.75rem;
   }
 
   .el-upload-dragger {

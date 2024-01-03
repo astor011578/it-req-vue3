@@ -71,7 +71,7 @@ export const useITReqStore = defineStore('ITRequest', {
         case 'Rejected': {
           permissions.approve = false
           permissions.postpone = isPgr || isReqr ? true : false
-          permissions.cancel = isReqr ? true : false
+          permissions.cancel = isPendingCancel ? false : (isReqr ? true : false)
           if (step === 'UAT1') {
             permissions.evidence = isPgr ? true : false
           } else {
@@ -82,7 +82,7 @@ export const useITReqStore = defineStore('ITRequest', {
         case 'Reviewing': {
           permissions.evidence = false
           permissions.postpone = isPgr || isReqr ? true : false
-          permissions.cancel = isReqr ? true : false
+          permissions.cancel = isPendingCancel ? false : (isReqr ? true : false)
           if (step === 'UAT1') {
             permissions.approve = isReqr ? true : false
           } else {
@@ -101,9 +101,9 @@ export const useITReqStore = defineStore('ITRequest', {
       return permissions
     },
     getApplicant: (state) => {
-      const username = useUserStore().username
-      const isPgr = state.pgrInfo.id === username ? true : false
-      const isReqr = state.reqrInfo.id === username ? true : false
+      const userId = useUserStore().getUserId
+      const isPgr = state.pgrInfo.id === userId ? true : false
+      const isReqr = state.reqrInfo.id === userId ? true : false
       const programmer = [state.pgrInfo.name, state.pgrInfo.id]
       const requester = [state.reqrInfo.name, state.reqrInfo.id]
       const applicant = isPgr ? programmer : (isReqr ? requester : [])

@@ -80,3 +80,11 @@ export const updateBenefit = (reqNo, data) => {
     data
   })
 }
+
+export const applyCancellation = (reqNo, data) => {
+  return request({
+    method: 'patch',
+    url: `request/apply-cancellation/${reqNo}`,
+    data
+  })
+}

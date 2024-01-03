@@ -11,11 +11,20 @@
       <el-descriptions column="2" border>
         <el-descriptions-item :label="lang('Application date')">{{ dateFormatter(cancellation.applyDate) }}</el-descriptions-item>
         <el-descriptions-item :label="lang('Applicant')">{{ cancellation.applicantName }}</el-descriptions-item>
-        <el-descriptions-item :label="lang('Reason')">{{ cancellation.reason }}</el-descriptions-item>
+        <el-descriptions-item :label="lang('Reason')">
+          <span v-if="!cancellation.reason || cancellation.reason === ''" class="ce-gray-color-italic">
+            {{ lang('There is no reason') }}
+          </span>
+          <span v-else>
+            {{ cancellation.reason }}
+          </span>
+        </el-descriptions-item>
         <el-descriptions-item :label="lang('Status')">
           <el-tag :type="tagTypes[cancellation.result]">{{ lang(cancellation.result) }}</el-tag>
         </el-descriptions-item>
-        <el-descriptions-item :label="lang('Review date')">{{ dateFormatter(cancellation.reviewDate) }}</el-descriptions-item>
+        <el-descriptions-item v-if="cancellation.reviewDate" :label="lang('Review date')">
+          {{ dateFormatter(cancellation.reviewDate) }}
+        </el-descriptions-item>
         <el-descriptions-item v-if="cancellation.result === 'Rejected'" :label="lang('Rejection message')">
           <span v-if="cancellation.comments === ''" class="ce-gray-color-italic">
             {{ lang('There is no comments') }}

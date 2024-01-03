@@ -40,6 +40,7 @@ const general = {
   'Total file size should be less than 10MB': '檔案總大小不得超過 10MB',
   'There is no file attached': '此需求沒有參考附件',
   'There is no comments': '沒有評論可顯示',
+  'There is no reason': '沒有申請理由可顯示',
   'Please leave the reason for cancellation here': '請在此留下取消理由',
   'Review this application': '簽閱此申請',
   'Load all data': '讀取所有資料',

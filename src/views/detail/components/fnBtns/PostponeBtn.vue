@@ -14,7 +14,7 @@
       <el-table id="postpone-table" :data="originSchedule" >
         <el-table-column align="center" prop="title" width="135" />
         <el-table-column align="center" prop="exp" :label="lang('Expect date')" width="95" />
-        <el-table-column align="center" prop="pp_times" :label="lang('Rescheduling times')" width="100" />
+        <el-table-column align="center" prop="rescheduling" :label="lang('Rescheduling times')" width="100" />
         <el-table-column align="center" :label="`${lang('Postpone to')}...`">
           <template #default="scope">
             <el-date-picker
@@ -41,15 +41,15 @@
 </template>
 <script setup>
 import { ElMessage } from 'element-plus'
+import { rescheduleRequest } from '@/api/IT-request'
 import { useITReqStore } from '@/store/IT-request'
 import { hasProperty, validateDate } from '@/hooks/useValidate'
 import { dateFormatter } from '@/hooks/useDate'
 import { lang } from '@/hooks/useCommon'
-import axiosReq from '@/utils/axiosReq'
 const store = ref({})
 const permission = ref(false)
 const router = useRouter()
-const ITno = useRoute().params.ITno
+const reqNo = useRoute().params.reqNo
 const reqType = useITReqStore().getReqType
 const loading = ref(false)          //是否要啟動 loading 動畫
 const showDialog = ref(false)       //是否要顯示 re-schedule 的 dialog
@@ -69,7 +69,7 @@ const props = defineProps({
 })
 
 onMounted(() => store.value = useITReqStore())
-watch(store, async (newVal, oldVal) => {
+watch(store, async (val) => {
   const _schedule = await store.value.getSchedule
   permission.value = await store.value.getPermission.postpone
 
@@ -84,11 +84,11 @@ watch(store, async (newVal, oldVal) => {
       originSchedule.value.push({
         stage: key,
         title: value.title,
-        exp: value.exp.new ? value.exp.new : 'undefined',
-        pp_times: value.exp.old.length,
+        exp: value.exp.new ? dateFormatter(value.exp.new) : 'undefined',
+        rescheduling: value.exp.old.length,
         state: value.state
       })
-      schedule[key] = value.exp.new
+      schedule[key] = dateFormatter(value.exp.new)
     }
   }
 })
@@ -111,7 +111,7 @@ const datePicker = {
 }
 
 //提交 re-schedule 的 request 到服務端
-const reschedule = () => {
+const reschedule = async () => {
   if (!schedule.UAT1 && !schedule.UAT2 && !schedule.release && !schedule.monitor) {
     ElMessage.warning(lang('Please fill in this field'))
     validate = {
@@ -133,38 +133,39 @@ const reschedule = () => {
     validate.monitor = reqType === 'Project' ? validateDate(newSchedule.release, newSchedule.monitor, 'release', 'Monitor 1 lot') : ''
 
     if (!validate.UAT2.length && !validate.release.length && !validate.monitor.length) {
+      const type = store.value.getReqType
+      const requestData = Object.assign({ type }, newSchedule)
       loading.value = true
 
-      setTimeout(() => {
-        axiosReq({
-          method: 'patch',
-          url: `/postpone?no=${ITno}`,
-          data: newSchedule
-        }).then((res) => {
-          loading.value = false
-          switch (res.code) {
-            case 200: {
-              ElMessage.success(lang('Reschedule successfully'))
-              router.push('/reload')
-              break
-            }
-            default: {
-              ElMessage.error(lang('Failed to reschedule'))
-              schedule = {
-                UAT1: '',
-                UAT2: '',
-                release: '',
-                monitor: ''
+      setTimeout(async () => {
+        await rescheduleRequest(reqNo, requestData)
+          .then((res) => {
+            console.log(res)
+            loading.value = false
+            switch (res.code) {
+              case 200: {
+                ElMessage.success(lang('Reschedule successfully'))
+                router.push('/reload')
+                break
               }
-              break
+              default: {
+                ElMessage.error(lang('Failed to reschedule'))
+                schedule = {
+                  UAT1: '',
+                  UAT2: '',
+                  release: '',
+                  monitor: ''
+                }
+                break
+              }
             }
-          }
-        })
+          })
       }, 2000)
     }
   }
 }
 </script>
+
 <style lang="scss">
 #postpone-table {
   .el-input {

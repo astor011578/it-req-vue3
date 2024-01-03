@@ -49,6 +49,14 @@ export const editRequest = (reqNo, data) => {
 }
 
 //以下與更新 IT-request 的功能有關
+export const rescheduleRequest = (reqNo, data) => {
+  return request({
+    method: 'patch',
+    url: `request/reschedule/${reqNo}`,
+    data
+  })
+}
+
 export const updateEvidence = (reqNo, data) => {
   return request({
     method: 'patch',

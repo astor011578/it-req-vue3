@@ -166,7 +166,8 @@ const general = {
   'Server encountered an unexpected condition': '伺服器遭遇錯誤',
   /* 其他 */
   'Approved': '簽閱通過',
-  'Pending': '等待簽閱中',
+  'Reviewing': '等待簽閱中',
+  'Rejected': '簽閱不通過',
   'Application date': '申請日期',
   'Applicant': '申請者',
   'Reason': '申請原因',

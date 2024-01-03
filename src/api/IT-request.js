@@ -88,3 +88,11 @@ export const applyCancellation = (reqNo, data) => {
     data
   })
 }
+
+export const reviewCancellation = (reqNo, data) => {
+  return request({
+    method: 'patch',
+    url: `request/review-cancellation/${reqNo}`,
+    data
+  })
+}

@@ -11,13 +11,13 @@
     </el-button>
     <el-dialog
       v-model="showDialog"
-      :title="`${lang('Review application for cancelling')} #${props.no}`"
+      :title="`${lang('Review application for cancelling')} #${props.reqNo}`"
       width="500px"
     >
       <el-descriptions column="1" border>
         <el-descriptions-item label="IT #">
           <template #default>
-            <a class="ce-link" :href="`#/detail/${cancellation.ITno}`" target="_blank">{{ cancellation.ITno }}</a>
+            <a class="ce-link" :href="`#/detail/${cancellation.reqNo}`" target="_blank">{{ cancellation.reqNo }}</a>
             <el-tag type="primary" class="ml-2">{{ cancellation.type }}</el-tag>
           </template>
         </el-descriptions-item>
@@ -30,10 +30,10 @@
         <el-descriptions-item :label="lang('Reason')">{{ cancellation.reason }}</el-descriptions-item>
       </el-descriptions>
       <div class="ce-dialog-footer-btn">
-        <el-button :loading="loading" @click="reviewReq('Reject')">
+        <el-button :loading="loading" @click="reviewReq('Rejected')">
           {{ lang('Reject') }}
         </el-button>
-        <el-button type="primary" :loading="loading" @click="reviewReq('Approve')">
+        <el-button type="primary" :loading="loading" @click="reviewReq('Approved')">
           {{ lang('Approve') }}
         </el-button>
       </div>
@@ -45,9 +45,10 @@
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { Pen } from '@/icons/common/'
 import { lang } from '@/hooks/useCommon'
+import { reviewCancellation } from '@/api/IT-request'
 const router = useRouter()
 const props = defineProps({
-  no: { type: String, required: true },
+  reqNo: { type: String, required: true },
   data: { type: Object, required: true }
 })
 const loading = ref(false)
@@ -56,36 +57,35 @@ const cancellation = computed(() => { return props?.data })
 
 /**
  * @description send reply to server
- * @param { String } reply: Approve || Reject
+ * @param { String } reply: Approved || Rejected
  */
-const reviewReq = (reply) => {
-  ElMessageBox.confirm(lang(`Are you sure to ${reply.toUpperCase()} this cancellation?`), 'Warning', {
+const reviewReq = async (reply) => {
+  const emphasize = reply === 'Approved' ? 'APPROVE' : 'REJECT'
+  const action = reply === 'Approved' ? 'Approve' : 'Reject'
+  ElMessageBox.confirm(lang(`Are you sure to ${emphasize} this cancellation?`), 'Warning', {
     confirmButtonText: lang('OK'),
     cancelButtonText: lang('Cancel'),
     type: 'warning',
-    showInput: reply === 'Reject' ? true : false,
+    showInput: reply === 'Rejected' ? true : false,
     inputPlaceholder: lang('Please leave a reason for rejection')
   })
     .then((input) => {
       loading.value = true
       let comments = input.value
 
-      setTimeout(() => {
-        axiosReq({
-          method: 'patch',
-          url: `/cancel/approve?no=${cancellation.value.ITno}`,
-          data: {
-            result: reply,
-            comments: reply === 'Reject' ? comments : ''
-          }
-        })
+      setTimeout(async () => {
+        const requestData = {
+          result: reply,
+          comments: reply === 'Rejected' ? comments : ''
+        }
+        await reviewCancellation(cancellation.value.reqNo, requestData)
           .then(() => {
             loading.value = false
-            ElMessage.success(lang(`${reply} cancelling application successfully`))
+            ElMessage.success(lang(`${action} cancelling application successfully`))
           })
           .catch(() => {
             loading.value = false
-            ElMessage.error(lang(`Failed to ${reply.toLowerCase()} cancelling application`))
+            ElMessage.error(lang(`Failed to ${action.toLowerCase()} cancelling application`))
           })
         router.push('/reload')
       }, 2000)
@@ -93,6 +93,7 @@ const reviewReq = (reply) => {
     .catch(() => ElMessage.info(lang('Action cancelled')))
 }
 </script>
+
 <style lang="scss">
 #dialogs-container {
   .el-descriptions__label {

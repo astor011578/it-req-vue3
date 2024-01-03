@@ -56,7 +56,7 @@
         </vxe-column>
         <vxe-column field="action" :title="lang('Action')" width="105" header-align="center" align="center">
           <template #default="{ row }">
-            <Dialog v-if="row.category === 'Cancellation'" :no="row.reqNo" :data="row" />
+            <Dialog v-if="row.category === 'Cancellation'" :reqNo="row.reqNo" :data="row" />
             <el-button
               v-else-if="row.category === 'Reviewing'"
               :icon="Pen"

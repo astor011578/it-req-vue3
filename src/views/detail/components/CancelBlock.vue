@@ -26,7 +26,7 @@
           {{ dateFormatter(cancellation.reviewDate) }}
         </el-descriptions-item>
         <el-descriptions-item v-if="cancellation.result === 'Rejected'" :label="lang('Rejection message')">
-          <span v-if="cancellation.comments === ''" class="ce-gray-color-italic">
+          <span v-if="!cancellation.comments || cancellation.comments === ''" class="ce-gray-color-italic">
             {{ lang('There is no comments') }}
           </span>
           <span v-else>

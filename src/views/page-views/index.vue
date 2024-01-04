@@ -16,7 +16,7 @@
               @get-is-all="getLoadAll"
             />
           </span>
-          <ExportViews
+          <ExportXlsx
             :daily="getDaily(rawData)"
             :weekly="getWeekly(rawData)"
             :monthly="getMonthly(rawData)"
@@ -39,7 +39,7 @@ import { ElMessage } from 'element-plus'
 import { LoadAll, TopTitle } from '@/components'
 import { getAllViews } from '@/api/summary'
 import { lang } from '@/hooks/useCommon'
-import { ViewsTable, SelectViews, ExportViews } from './components'
+import { ViewsTable, SelectViews, ExportXlsx } from './components'
 const title = ref('Daily views report')   //綁定 title 的值
 const selected = ref('daily')             //綁定選單選中的值
 const rawData = ref([])     //從服務端獲取的初始資料

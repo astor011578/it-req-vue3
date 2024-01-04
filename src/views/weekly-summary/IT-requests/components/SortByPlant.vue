@@ -19,9 +19,8 @@
       @cell-mouseenter="mouseEnter"
       @cell-mouseleave="mouseLeave"
     >
-      <vxe-column field="week_simple" :title="lang('Week')" />
-      <vxe-column field="site" :title="lang('Plant')" />
-      <vxe-column field="owner" :title="lang('Owner')" />
+      <vxe-column field="simpleWeek" :title="lang('Week')" />
+      <vxe-column field="plant" :title="lang('Plant')" />
       <vxe-column field="total" :title="lang('Total')" />
       <vxe-column field="reviewing" title="Reviewing" />
       <vxe-column field="prcd" title="Proceeding" />
@@ -46,25 +45,24 @@ const props = defineProps({
 
 let allData = reactive([])      //all data
 let allMerge = reactive([])     //merge-cells for all data
-let filterData = reactive([])   //last 15 data (5 weeks * 3 sites)
+let filterData = reactive([])   //last 15 data (5 weeks * 3 plants)
 let filterMerge = reactive([])  //merge-cells for filtered data
 //get allData & filterData
 if (props.resource) {
-  const siteArr = ['T1', 'T3', 'T6']
+  const plantArr = ['P1', 'P2', 'P3']
   props.resource.forEach((item) => {
     for (let i = 0; i < 3; i++) {
       allData.push({
-        week_full: item.week_full,
-        week_simple: item.week_simple,
-        site: siteArr[i],
-        owner: item[`${siteArr[i]}_owner`][0],
-        total: item[`${siteArr[i]}_total`],
-        reviewing: item[`${siteArr[i]}_reviewing`],
-        prcd: item[`${siteArr[i]}_prcd`],
-        done: item[`${siteArr[i]}_done`],
-        cancel: item[`${siteArr[i]}_cancel`],
-        delay: item[`${siteArr[i]}_delay`],
-        rejected: item[`${siteArr[i]}_rejected`]
+        fullWeek: item.fullWeek,
+        simpleWeek: item.simpleWeek,
+        plant: plantArr[i],
+        total: item[`total${plantArr[i]}`],
+        reviewing: item[`reviewing${plantArr[i]}`],
+        prcd: item[`prcd${plantArr[i]}`],
+        done: item[`done${plantArr[i]}`],
+        cancel: item[`cancel${plantArr[i]}`],
+        delay: item[`delay${plantArr[i]}`],
+        rejected: item[`rejected${plantArr[i]}`]
       })
     }
   })
@@ -88,9 +86,9 @@ const tipForWeek = {
   enterable: true,
   contentMethod: ({ type, column, row, items, _columnIndex }) => {
     const { field } = column
-    if (field === 'week_simple') {
+    if (field === 'simpleWeek') {
       if (type !== 'header' && type !== 'footer') {
-        return `${row['week_full'].toString().slice(0, 4)} ${row['week_simple']}`
+        return `${row['fullWeek'].toString().slice(0, 4)} ${row['simpleWeek']}`
       }
     }
     return null
@@ -114,10 +112,11 @@ const highlightCell = ({ row, column }) => {
 
 //Row-span hovering handler
 const hoveringRows = ref('')
-const hoverRowsHandler = ({ row }) => { return row.week_full === hoveringRows.value ? 'hover-span-rows' : '' }
-const mouseEnter = ({ row }) => hoveringRows.value = row.week_full
+const hoverRowsHandler = ({ row }) => { return row.fullWeek === hoveringRows.value ? 'hover-span-rows' : '' }
+const mouseEnter = ({ row }) => hoveringRows.value = row.fullWeek
 const mouseLeave = () => hoveringRows.value = ''
 </script>
+
 <style lang="scss">
 .hover-span-rows {
   background-color: #97b3ce66 !important;

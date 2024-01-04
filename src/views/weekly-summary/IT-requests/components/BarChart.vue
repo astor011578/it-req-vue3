@@ -100,7 +100,7 @@ const loadData = (isNeedAll, resource) => {
     totals: []
   }
   for (let i = _startIdx; i < resource.length; i++) {
-    _loadData.weeks.push(resource[i].week_simple)
+    _loadData.weeks.push(resource[i].simpleWeek)
     _loadData.prcds.push(resource[i].prcd)
     _loadData.dones.push(resource[i].done)
     _loadData.reviewings.push(resource[i].reviewing)

@@ -15,7 +15,7 @@
       :loading-config="{ text: `${lang('Loading')}...` }"
       :empty-render="{ name: 'NoData' }"
     >
-      <vxe-column field="week_simple" :title="lang('Week')" />
+      <vxe-column field="simpleWeek" :title="lang('Week')" />
       <vxe-column field="total" :title="lang('Total')" />
       <vxe-colgroup :title="lang('Status')">
         <vxe-column field="reviewing" title="Reviewing" />
@@ -24,10 +24,6 @@
         <vxe-column field="cancel" title="Cancel" />
         <vxe-column field="delay" title="Delay" />
         <vxe-column field="rejected" title="Rejected" />
-      </vxe-colgroup>
-      <vxe-colgroup :title="lang('Type')">
-        <vxe-column field="oneTime" title="OneTime" />
-        <vxe-column field="project" title="Project" />
       </vxe-colgroup>
     </vxe-table>
   </div>
@@ -60,9 +56,9 @@ const tipForWeek = {
   enterable: true,
   contentMethod: ({ type, column, row, items, _columnIndex }) => {
     const { field } = column
-    if (field === 'week_simple') {
+    if (field === 'simpleWeek') {
       if (type !== 'header' && type !== 'footer') {
-        return `${row['week_full'].toString().slice(0, 4)} ${row['week_simple']}`
+        return `${row['fullWeek'].toString().slice(0, 4)} ${row['simpleWeek']}`
       }
     }
     return null

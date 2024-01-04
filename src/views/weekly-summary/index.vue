@@ -1,14 +1,15 @@
 <template>
   <div>
     <ITRequests />
-    <Benefits />
+    <!-- <Benefits /> -->
   </div>
 </template>
 
 <script setup>
 import { default as ITRequests } from './IT-requests/index.vue'
-import { default as Benefits } from './benefits/index.vue'
+// import { default as Benefits } from './benefits/index.vue'
 </script>
+
 <style scoped lang="scss">
 //override font color in el-button
 :deep(.el-button) {

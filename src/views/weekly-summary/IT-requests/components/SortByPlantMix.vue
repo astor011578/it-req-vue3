@@ -15,37 +15,37 @@
       :loading-config="{ text: `${lang('Loading')}...` }"
       :empty-render="{ name: 'NoData' }"
     >
-      <vxe-column field="week_simple" :title="lang('Week')" />
+      <vxe-column field="simpleWeek" :title="lang('Week')" />
       <vxe-column field="total" :title="lang('Total')" />
       <vxe-colgroup title="Reviewing">
-        <vxe-column field="T1_reviewing" title="T1" />
-        <vxe-column field="T3_reviewing" title="T3" />
-        <vxe-column field="T6_reviewing" title="T6" />
+        <vxe-column field="reviewingP1" title="P1" />
+        <vxe-column field="reviewingP2" title="P2" />
+        <vxe-column field="reviewingP3" title="P3" />
       </vxe-colgroup>
       <vxe-colgroup title="Proceeding">
-        <vxe-column field="T1_prcd" title="T1" />
-        <vxe-column field="T3_prcd" title="T3" />
-        <vxe-column field="T6_prcd" title="T6" />
+        <vxe-column field="prcdP1" title="P1" />
+        <vxe-column field="prcdP2" title="P2" />
+        <vxe-column field="prcdP3" title="P3" />
       </vxe-colgroup>
       <vxe-colgroup title="Done">
-        <vxe-column field="T1_done" title="T1" />
-        <vxe-column field="T3_done" title="T3" />
-        <vxe-column field="T6_done" title="T6" />
+        <vxe-column field="doneP1" title="P1" />
+        <vxe-column field="doneP2" title="P2" />
+        <vxe-column field="doneP3" title="P3" />
       </vxe-colgroup>
       <vxe-colgroup title="Cancel">
-        <vxe-column field="T1_cancel" title="T1" />
-        <vxe-column field="T3_cancel" title="T3" />
-        <vxe-column field="T6_cancel" title="T6" />
+        <vxe-column field="cancelP1" title="P1" />
+        <vxe-column field="cancelP2" title="P2" />
+        <vxe-column field="cancelP3" title="P3" />
       </vxe-colgroup>
       <vxe-colgroup title="Delay">
-        <vxe-column field="T1_delay" title="T1" />
-        <vxe-column field="T3_delay" title="T3" />
-        <vxe-column field="T6_delay" title="T6" />
+        <vxe-column field="delayP1" title="P1" />
+        <vxe-column field="delayP2" title="P2" />
+        <vxe-column field="delayP3" title="P3" />
       </vxe-colgroup>
       <vxe-colgroup title="Rejected">
-        <vxe-column field="T1_rejected" title="T1" />
-        <vxe-column field="T3_rejected" title="T3" />
-        <vxe-column field="T6_rejected" title="T6" />
+        <vxe-column field="rejectedP1" title="P1" />
+        <vxe-column field="rejectedP2" title="P2" />
+        <vxe-column field="rejectedP3" title="P3" />
       </vxe-colgroup>
     </vxe-table>
   </div>
@@ -78,9 +78,9 @@ const tipForWeek = {
   enterable: true,
   contentMethod: ({ type, column, row, items, _columnIndex }) => {
     const { field } = column
-    if (field === 'week_simple') {
+    if (field === 'simpleWeek') {
       if (type !== 'header' && type !== 'footer') {
-        return `${row['week_full'].toString().slice(0, 4)} ${row['week_simple']}`
+        return `${row['fullWeek'].toString().slice(0, 4)} ${row['simpleWeek']}`
       }
     }
     return null
@@ -92,33 +92,33 @@ const tipForWeek = {
  */
 const highlightCell = ({ row, column }) => {
   if (
-    (column.field === 'T1_done' && row.T1_done > 0) ||
-    (column.field === 'T3_done' && row.T3_done > 0) ||
-    (column.field === 'T6_done' && row.T6_done > 0)
+    (column.field === 'doneP1' && row.doneP1 > 0) ||
+    (column.field === 'doneP2' && row.doneP2 > 0) ||
+    (column.field === 'doneP3' && row.doneP3 > 0)
   ) {
     return 'ce-highlight'
   }
 
   if (
-    (column.field === 'T1_cancel' && row.T1_cancel > 0) ||
-    (column.field === 'T3_cancel' && row.T3_cancel > 0) ||
-    (column.field === 'T6_cancel' && row.T6_cancel > 0)
+    (column.field === 'cancelP1' && row.cancelP1 > 0) ||
+    (column.field === 'cancelP2' && row.cancelP2 > 0) ||
+    (column.field === 'cancelP3' && row.cancelP3 > 0)
   ) {
     return 'ce-lowlight'
   }
 
   if (
-    (column.field === 'T1_delay' && row.T1_delay > 0) ||
-    (column.field === 'T3_delay' && row.T3_delay > 0) ||
-    (column.field === 'T6_delay' && row.T6_delay > 0)
+    (column.field === 'delayP1' && row.delayP1 > 0) ||
+    (column.field === 'delayP2' && row.delayP2 > 0) ||
+    (column.field === 'delayP3' && row.delayP3 > 0)
   ) {
     return 'ce-lowlight'
   }
 
   if (
-    (column.field === 'T1_rejected' && row.T1_rejected > 0) ||
-    (column.field === 'T3_rejected' && row.T3_rejected > 0) ||
-    (column.field === 'T6_rejected' && row.T6_rejected > 0)
+    (column.field === 'rejectedP1' && row.rejectedP1 > 0) ||
+    (column.field === 'rejectedP2' && row.rejectedP2 > 0) ||
+    (column.field === 'rejectedP3' && row.rejectedP3 > 0)
   ) {
     return 'ce-lowlight'
   }

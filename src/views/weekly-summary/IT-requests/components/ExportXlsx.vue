@@ -21,8 +21,8 @@ const props = defineProps({
   }
 })
 const today = dateGenerator()
-const filename = ref(`IT Request_${today}_Weekly Summary`)
-const sheetnames = ref(['Sheet1', 'Sheet2', 'Sheet3'])
+const filename = ref(`IT-Request_${today}_weekly-Summary`)
+const sheetnames = ref(['Sort by status', 'Show plant data (grouped)', 'Show plant data (ungrouped)'])
 const resource = ref([])
 const data1 = ref([]) //二維陣列
 const cols1 = ref([])
@@ -37,21 +37,21 @@ const cols3 = ref([])
  */
 const transferData = async ($resource) => {
   //for debugging
-  // console.log($resource)
+  console.log($resource)
 
   //1st table
   cols1.value = [
-    ['Week', 'Total', 'Status', '', '', '', '', '', 'Type', ''],
-    ['', '', 'Reviewing', 'Proceeding', 'Done', 'Cancel', 'Delay', 'Rejected', 'OneTime', 'Project']
+    ['Week', 'Total', 'Status', '', '', '', '', ''],
+    ['', '', 'Reviewing', 'Proceeding', 'Done', 'Cancel', 'Delay', 'Rejected']
   ]
 
   //2nd table
-  cols2.value = [['Week', 'Plant', 'Owner', 'Total', 'Reviewing', 'Proceeding', 'Done', 'Cancel', 'Delay', 'Rejected']]
+  cols2.value = [['Week', 'Plant', 'Total', 'Reviewing', 'Proceeding', 'Done', 'Cancel', 'Delay', 'Rejected']]
 
   //3rd table
   cols3.value = [
     ['Week', 'Total', 'Reviewing', '', '', 'Proceeding', '', '', 'Done', '', '', 'Cancel', '', '', 'Delay', '', '', 'Rejected', '', ''],
-    ['', '', 'T1', 'T3', 'T6', 'T1', 'T3', 'T6', 'T1', 'T3', 'T6', 'T1', 'T3', 'T6', 'T1', 'T3', 'T6', 'T1', 'T3', 'T6']
+    ['', '', 'P1', 'P2', 'P3', 'P1', 'P2', 'P3', 'P1', 'P2', 'P3', 'P1', 'P2', 'P3', 'P1', 'P2', 'P3', 'P1', 'P2', 'P3']
   ]
 
   data1.value = []
@@ -68,51 +68,38 @@ const transferData = async ($resource) => {
       doc.done,
       doc.cancel,
       doc.delay,
-      doc.rejected,
-      doc.oneTime,
-      doc.project
+      doc.rejected
     ])
 
     //get data in 2nd table
     data2.value.push(
-      [
-        doc.week,
-        'T1',
-        doc.T1.owner[0],
-        doc.T1.total,
-        doc.T1.reviewing,
-        doc.T1.prcd,
-        doc.T1.done,
-        doc.T1.cancel,
-        doc.T1.delay,
-        doc.T1.rejected
-      ],
-      ['', 'T3', doc.T3.owner[0], doc.T3.total, doc.T3.reviewing, doc.T3.prcd, doc.T3.done, doc.T3.cancel, doc.T3.delay, doc.T3.rejected],
-      ['', 'T6', doc.T6.owner[0], doc.T6.total, doc.T6.reviewing, doc.T6.prcd, doc.T6.done, doc.T6.cancel, doc.T6.delay, doc.T6.rejected]
+      [doc.week, 'P1', doc.P1.total, doc.P1.reviewing, doc.P1.prcd, doc.P1.done, doc.P1.cancel, doc.P1.delay, doc.P1.rejected],
+      ['', 'P2', doc.P2.total, doc.P2.reviewing, doc.P2.prcd, doc.P2.done, doc.P2.cancel, doc.P2.delay, doc.P2.rejected],
+      ['', 'P3', doc.P3.total, doc.P3.reviewing, doc.P3.prcd, doc.P3.done, doc.P3.cancel, doc.P3.delay, doc.P3.rejected]
     )
 
     //get data in 3rd table
     data3.value.push([
       doc.week,
       doc.total,
-      doc.T1.reviewing,
-      doc.T3.reviewing,
-      doc.T6.reviewing,
-      doc.T1.prcd,
-      doc.T3.prcd,
-      doc.T6.prcd,
-      doc.T1.done,
-      doc.T3.done,
-      doc.T6.done,
-      doc.T1.cancel,
-      doc.T3.cancel,
-      doc.T6.cancel,
-      doc.T1.delay,
-      doc.T3.delay,
-      doc.T6.delay,
-      doc.T1.rejected,
-      doc.T3.rejected,
-      doc.T6.rejected
+      doc.P1.reviewing,
+      doc.P2.reviewing,
+      doc.P3.reviewing,
+      doc.P1.prcd,
+      doc.P2.prcd,
+      doc.P3.prcd,
+      doc.P1.done,
+      doc.P2.done,
+      doc.P3.done,
+      doc.P1.cancel,
+      doc.P2.cancel,
+      doc.P3.cancel,
+      doc.P1.delay,
+      doc.P2.delay,
+      doc.P3.delay,
+      doc.P1.rejected,
+      doc.P2.rejected,
+      doc.P3.rejected
     ])
   }
 }
@@ -135,10 +122,11 @@ const drawTable = async ($seq, $wb, $sheetname, $columns, $data, $width) => {
 
   //樣式相關
   const headerFont = { bold: true, size: 10, name: 'Arial' }
-  const headerFill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFF00' } }
+  const headerFill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE4E7ED' } }
   const bodyFont = { size: 10, name: 'Arial' }
-  const redFont = { size: 10, name: 'Arial', color: { argb: 'FFFF0000' } }
-  const blueFont = { size: 10, name: 'Arial', color: { argb: 'FF0000FF' } }
+  const redFont = { bold: true, size: 10, name: 'Arial', color: { argb: 'FFFF0000' } }
+  const blueFont = { bold: true, size: 10, name: 'Arial', color: { argb: 'FF0000FF' } }
+  const boldFont = { bold: true, size: 10, name: 'Arial' }
   const alignCenter = { vertical: 'middle', horizontal: 'center' }
   const borderStyle = {
     top: { style: 'thin' },
@@ -159,7 +147,7 @@ const drawTable = async ($seq, $wb, $sheetname, $columns, $data, $width) => {
   //處理合併儲存格
   switch ($seq) {
     case 1: {
-      const mergeCells = ['A1:A2', 'B1:B2', 'C1:H1', 'I1:J1']
+      const mergeCells = ['A1:A2', 'B1:B2', 'C1:H1']
       mergeCells.forEach((mergeCell) => worksheet.mergeCells(mergeCell))
       break
     }
@@ -190,12 +178,16 @@ const drawTable = async ($seq, $wb, $sheetname, $columns, $data, $width) => {
         worksheet.getRow(b).getCell(a).fill = headerFill
         worksheet.getRow(b).getCell(a).font = headerFont
       } else {
+        const isOverZero = worksheet.getRow(b).getCell(a).value > 0
         switch ($seq) {
           case 1: {
-            if (a === 5 && worksheet.getRow(b).getCell(a).value > 0) {
+            if (2 <= a && a < 5 && isOverZero) {
+              //total, reviewing, proceeding 件數 > 0 => 標粗體
+              worksheet.getRow(b).getCell(a).font = boldFont
+            } else if (a === 5 && isOverZero) {
               //done 件數 > 0 => 標藍字
               worksheet.getRow(b).getCell(a).font = blueFont
-            } else if (6 <= a && a <= 8 && worksheet.getRow(b).getCell(a).value > 0) {
+            } else if (6 <= a && a <= 8 && isOverZero) {
               //cancel, delay, rejected 件數 > 0 => 標紅字
               worksheet.getRow(b).getCell(a).font = redFont
             } else {
@@ -205,10 +197,13 @@ const drawTable = async ($seq, $wb, $sheetname, $columns, $data, $width) => {
             break
           }
           case 2: {
-            if (a === 7 && worksheet.getRow(b).getCell(a).value > 0) {
+            if (3 <= a && a <= 5 && isOverZero) {
+              //total, reviewing, proceeding 件數 > 0 => 標粗體
+              worksheet.getRow(b).getCell(a).font = boldFont
+            } else if (a === 6 && isOverZero) {
               //done 件數 > 0 => 標藍字
               worksheet.getRow(b).getCell(a).font = blueFont
-            } else if (8 <= a && a <= 10 && worksheet.getRow(b).getCell(a).value > 0) {
+            } else if (7 <= a && a <= 9 && isOverZero) {
               //cancel, delay, rejected 件數 > 0 => 標紅字
               worksheet.getRow(b).getCell(a).font = redFont
             } else {
@@ -218,10 +213,13 @@ const drawTable = async ($seq, $wb, $sheetname, $columns, $data, $width) => {
             break
           }
           case 3: {
-            if (9 <= a && a <= 11 && worksheet.getRow(b).getCell(a).value > 0) {
+            if (2 <= a && a <= 8 && isOverZero) {
+              //total, reviewing, proceeding 件數 > 0 => 標粗體
+              worksheet.getRow(b).getCell(a).font = boldFont
+            } else if (9 <= a && a <= 11 && isOverZero) {
               //done 件數 > 0 => 標藍字
               worksheet.getRow(b).getCell(a).font = blueFont
-            } else if (12 <= a && a <= 20 && worksheet.getRow(b).getCell(a).value > 0) {
+            } else if (12 <= a && a <= 20 && isOverZero) {
               //cancel, delay, rejected 件數 > 0 => 標紅字
               worksheet.getRow(b).getCell(a).font = redFont
             } else {

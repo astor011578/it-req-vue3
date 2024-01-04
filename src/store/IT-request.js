@@ -188,10 +188,10 @@ export const useITReqStore = defineStore('ITRequest', {
               }
               //get current proceeding step
               switch (true) {
-                case uploadStatus.UAT1 !== 'Approved': this.step = 'UAT1'; break;
-                case uploadStatus.UAT2 !== 'Approved': this.step = 'UAT2'; break;
-                case uploadStatus.release !== 'Approved': this.step = 'release'; break;
-                case uploadStatus.monitor !== 'Approved': this.step = 'monitor'; break;
+                case uploadStatus.UAT1 && uploadStatus.UAT1 !== 'Approved': this.step = 'UAT1'; break;
+                case uploadStatus.UAT2 && uploadStatus.UAT2 !== 'Approved': this.step = 'UAT2'; break;
+                case uploadStatus.release && uploadStatus.release !== 'Approved': this.step = 'release'; break;
+                case uploadStatus.monitor && uploadStatus.monitor !== 'Approved': this.step = 'monitor'; break;
                 default: this.step = status; break;
               }
             })

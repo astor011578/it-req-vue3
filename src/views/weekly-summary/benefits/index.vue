@@ -38,7 +38,7 @@
 
 <script setup>
 import { LoadAll, TopTitle } from '@/components'
-import { getWeeklyBenefitSummary } from '@/api/summary'
+import { getBenefitSummary } from '@/api/summary'
 import { lang } from '@/hooks/useCommon'
 import { BenefitTable, BarChart, ExportXlsx } from './components'
 const resource = ref([])
@@ -52,7 +52,7 @@ const getIsAll = (isAllFromChild) => {
 onMounted(async () => {
   loading.value = true
   setTimeout(async () => {
-    await getWeeklyBenefitSummary()
+    await getBenefitSummary()
       .then((res) => {
         switch (res.code) {
           case 200: {

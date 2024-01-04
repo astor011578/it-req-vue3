@@ -37,7 +37,7 @@
 <script setup>
 import { ElMessage } from 'element-plus'
 import { LoadAll, TopTitle } from '@/components'
-import { getTimestamp } from '@/hooks/useDate'
+import { getAllViews } from '@/api/summary'
 import { lang } from '@/hooks/useCommon'
 import { ViewsTable, SelectViews, ExportViews } from './components'
 const title = ref('Daily views report')   //綁定 title 的值
@@ -102,15 +102,15 @@ const getMonthly = async (rawData) => {
   return monthlyData
 }
 
-//取得近 10 筆資料
+//取得近 20 筆資料
 const getRecently = async (data) => {
-  if (data.length <= 10) {
+  if (data.length <= 20) {
     return data
   } else {
     const recentData = []
     for await (const [idx, doc] of Object.entries(data)) {
       const index = Number.parseInt(idx)
-      if (index + 1 > data.length - 10) recentData.push(doc)
+      if (index + 1 > data.length - 20) recentData.push(doc)
     }
     return recentData
   }
@@ -120,7 +120,7 @@ const getRecently = async (data) => {
 onMounted(async () => {
   loading.value = true
   try {
-    const res = await axiosReq({ method: 'get', url: `/summary/views/${getTimestamp()}` })
+    const res = await getAllViews()
     rawData.value = Object.assign([], res.data)
     tableData.value = await getDaily(rawData.value)
     setTimeout(() => loading.value = false, 1000)

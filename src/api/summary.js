@@ -8,17 +8,16 @@ export const getITReqSummary = () => {
   })
 }
 
-export const getDailyBenefitSummary = () => {
+export const getBenefitSummary = () => {
   return request({
     method: 'get',
-    url: `/summary/daily-benefits/${getTimestamp()}`
+    url: `/summary/benefits/${getTimestamp()}`
   })
 }
 
-export const getWeeklyBenefitSummary = () => {
+export const getAllViews = () => {
   return request({
     method: 'get',
-    url: `/summary/weekly-benefits/${getTimestamp()}`
+    url: `/summary/views/${getTimestamp()}`
   })
 }
-  

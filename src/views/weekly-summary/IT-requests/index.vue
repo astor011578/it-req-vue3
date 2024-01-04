@@ -87,7 +87,6 @@ const plantSum = reactive([])    //第二個與第三個表格的 data
 onMounted(async () => {
   await getITReqSummary()
     .then((res) => {
-      console.log(res)
       switch (res.code) {
         case 200: {
           resource.value = Object.assign([], res.data)

@@ -21,7 +21,7 @@ const props = defineProps({
   }
 })
 const today = dateGenerator()
-const filename = ref(`IT-Request_${today}_weekly-Summary`)
+const filename = ref(`IT-Request_${today}_weekly-request-summary`)
 const sheetnames = ref(['Sort by status', 'Show plant data (grouped)', 'Show plant data (ungrouped)'])
 const resource = ref([])
 const data1 = ref([]) //二維陣列
@@ -37,7 +37,7 @@ const cols3 = ref([])
  */
 const transferData = async ($resource) => {
   //for debugging
-  console.log($resource)
+  // console.log($resource)
 
   //1st table
   cols1.value = [
@@ -265,7 +265,7 @@ const exportXlsx = async () => {
     ElMessage.success(lang('Export successfully'))
     return FileSaver(new Blob([buffer]), filename.value + '.xlsx')
   } catch (err) {
-    console.log(err)
+    console.error(err)
     ElMessage.error(lang('Failed to export'))
   }
 }

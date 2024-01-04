@@ -16,7 +16,7 @@
               @get-is-all="getIsAll"
             />
           </span>
-          <ExportBenefits v-if="resource.length" :resource="resource" />
+          <ExportXlsx v-if="resource.length" :resource="resource" />
         </span>
       </div>
       <!-- contents -->
@@ -38,9 +38,9 @@
 
 <script setup>
 import { LoadAll, TopTitle } from '@/components'
-import { getTimestamp } from '@/hooks/useDate'
+import { getWeeklyBenefitSummary } from '@/api/summary'
 import { lang } from '@/hooks/useCommon'
-import { BenefitTable, BarChart, ExportBenefits } from './components'
+import { BenefitTable, BarChart, ExportXlsx } from './components'
 const resource = ref([])
 const loading = ref(false)
 const isAll = ref(false)
@@ -49,37 +49,35 @@ const getIsAll = (isAllFromChild) => {
   isAll.value = isAllFromChild
   setTimeout(() => loading.value = false, 1500)
 }
-onMounted(() => {
+onMounted(async () => {
   loading.value = true
-  setTimeout(() => {
-    axiosReq({
-      method: 'get',
-      url: `/summary/weekly-benefit/${getTimestamp()}`
-    }).then((res) => {
-      switch (res.code) {
-        case 200: {
-          res.data.forEach(doc => {
-            const { year, week, staffExp, testerExp, qualityExp, staffAct, testerAct, qualityAct } = doc
-            const simpleWeek = `W${week.substring(4)}`
-            resource.value.push({
-              fullWeek: `${year} ${simpleWeek}`,
-              simpleWeek,
-              staffExp: Math.round(staffExp),
-              testerExp: Math.round(testerExp),
-              qualityExp,
-              staffAct: Math.round(staffAct),
-              testerAct: Math.round(testerAct),
-              qualityAct,
+  setTimeout(async () => {
+    await getWeeklyBenefitSummary()
+      .then((res) => {
+        switch (res.code) {
+          case 200: {
+            res.data.forEach(doc => {
+              const { year, week, staffExp, testerExp, qualityExp, staffAct, testerAct, qualityAct } = doc
+              const simpleWeek = `W${week.substring(4)}`
+              resource.value.push({
+                fullWeek: `${year} ${simpleWeek}`,
+                simpleWeek,
+                staffExp: Math.round(staffExp),
+                testerExp: Math.round(testerExp),
+                qualityExp,
+                staffAct: Math.round(staffAct),
+                testerAct: Math.round(testerAct),
+                qualityAct,
+              })
             })
-          })
-          //for debugging
-          // console.log(resource.value)
-          break
+            //for debugging
+            // console.log(resource.value)
+            break
+          }
+          default: break
         }
-        default: break
-      }
-      loading.value = false
-    })
+        loading.value = false
+      })
   }, 1500)
 })
 </script>

@@ -21,3 +21,10 @@ export const getAllViews = () => {
     url: `/summary/views/${getTimestamp()}`
   })
 }
+
+export const updateViews = (isIndex) => {
+  return request({
+    method: 'patch',
+    url: `/summary/views?isIndex=${isIndex}`
+  })
+}

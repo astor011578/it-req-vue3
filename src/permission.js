@@ -1,10 +1,11 @@
 import router from '@/router'
+import { ElLoading } from 'element-plus'
+import { updateViews } from '@/api/summary'
+import { lang } from '@/hooks/useCommon'
 import { useUserStore } from '@/store/user'
 import { usePermissionStore } from '@/store/permission'
 import { useNewReqStore } from '@/store/new-request'
 import { getToken } from '@/utils/auth'
-import { lang } from '@/hooks/useCommon'
-import { ElLoading } from 'element-plus'
 import getPageTitle from '@/utils/getPageTitle'
 import settings from './settings'
 import NProgress from 'nprogress'
@@ -35,11 +36,11 @@ router.beforeEach(async (to, from, next) => {
   const newReqStore = useNewReqStore()
 
   //在變換路由前重置 newReqStore 中的資訊
-  await newReqStore.resetApplication()
-  await newReqStore.resetValidate()
+  newReqStore.resetApplication()
+  newReqStore.resetValidate()
 
-  // let isIndex = (to.path === '/login' || to.path === '/tables') ? 1 : 0
-  // axiosReq({ method: 'patch', url: `/summary/views?isIndex=${isIndex}` })
+  let isIndex = (to.path === '/login' || to.path === '/tables') ? true : false
+  await updateViews(isIndex)
 
   if (getToken()) {
     //1. 如果已經取得 token (通行證)
@@ -72,6 +73,7 @@ router.beforeEach(async (to, from, next) => {
             //hack method to ensure that addRoutes is complete
             //set the replace: true, so the navigation will not leave a history record
             next({ ...to, replace: true })
+            
           } catch (err) {
             await userStore.resetState()
             next(`/login?redirect=${to.fullPath}`)

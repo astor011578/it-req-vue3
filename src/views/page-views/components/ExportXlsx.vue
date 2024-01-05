@@ -41,7 +41,7 @@ const props = defineProps({
   }
 })
 const today = dateGenerator()
-const filename = ref(`IT-Request_${today}page-views-report`)
+const filename = ref(`IT-Request_${today}_page-views-report`)
 const sheetnames = ref(['Daily', 'Weekly', 'Monthly'])
 const dailyData = ref([])
 const dailyCols = ref(['#', 'Year', 'Date', 'Total views'])

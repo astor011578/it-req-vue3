@@ -28,7 +28,7 @@ const status = ref('')
 const reviewingStatuses = ['Reviewing', 'Rejected', 'Returned']
 const loading = ref(false)
 //name of each collapse
-const collapseKeys = ref(['1', '2', '3', '4', '5', '6'])
+const collapseKeys = ref(['1', '2', '3', '4', '5'])
 
 onMounted(async () => {
   loading.value = true

@@ -1,6 +1,6 @@
 <template>
   <!-- evidence block -->
-  <el-collapse-item name="6">
+  <el-collapse-item name="5">
     <template #title>
       <div class="detail-collapse">
         <font-awesome-icon icon="fa-solid fa-thumbtack" />

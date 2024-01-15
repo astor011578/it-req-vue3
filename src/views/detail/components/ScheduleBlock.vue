@@ -1,6 +1,6 @@
 <template>
   <!-- schedule block -->
-  <el-collapse-item name="5">
+  <el-collapse-item name="4">
     <template #title>
       <div class="detail-collapse">
         <font-awesome-icon icon="fa-solid fa-thumbtack" />

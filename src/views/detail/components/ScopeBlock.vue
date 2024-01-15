@@ -1,6 +1,6 @@
 <template>
   <!-- Scope block -->
-  <el-collapse-item name="4">
+  <el-collapse-item name="3">
     <template #title>
       <div class="detail-collapse">
         <font-awesome-icon icon="fa-solid fa-thumbtack" />

@@ -1,5 +1,0 @@
-export { default as SortByType } from './SortByType.vue'
-export { default as SortByPlant } from './SortByPlant.vue'
-export { default as SortByPlantMix } from './SortByPlantMix.vue'
-export { default as BarChart } from './BarChart.vue'
-export { default as ExportXlsx } from './ExportXlsx.vue'

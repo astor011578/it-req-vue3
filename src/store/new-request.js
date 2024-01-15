@@ -18,8 +18,6 @@ export const useNewReqStore = defineStore('newRequest', {
   },
 
   getters: {
-    getBenefitType: (state) => { return state.application.benefit.type },
-    getBenefit: (state) => { return state.application.benefit },
     getReqTable: (state) => { return state.application.reqTable },
     getPlant: (state) => { return state.application.reqTable.plant },
     getRequestType: (state) => { return state.application.type },
@@ -35,15 +33,6 @@ export const useNewReqStore = defineStore('newRequest', {
     },
     setPgr(pgrInfo) {
       this.application.coreTeam.pgr = Object.assign({}, pgrInfo)
-    },
-    setBenefitType(benefitType) {
-      this.application.benefit.type = benefitType
-    },
-    setQualityIssue(qualityIssue) {
-      this.application.benefit.qualityIssue = qualityIssue
-    },
-    setSavingTimes(savingTimes) {
-      this.application.benefit.savingTimes = savingTimes
     },
     setReqTable(reqTableData) {
       const { reqName, stage, customer, device, tester, equipment, system, purpose } = reqTableData
@@ -209,7 +198,7 @@ export const useNewReqStore = defineStore('newRequest', {
       await getRequest(reqNo)
         .then(res => {
           if (res.code === 200) {
-            const { reqrName, reqrId, pgrName, pgrId, benefitType, benefit } = res.data
+            const { reqrName, reqrId, pgrName, pgrId } = res.data
             this.setReqr({
               name: reqrName,
               id: reqrId
@@ -218,15 +207,6 @@ export const useNewReqStore = defineStore('newRequest', {
               name: pgrName,
               id: pgrId
             })
-            this.setBenefitType(benefitType)
-            const { qualityIssue, testerSavingExp, onlineSavingExp, offlineSavingExp } = benefit
-            this.setQualityIssue(qualityIssue)
-            const savingTimes = {
-              tester: testerSavingExp,
-              onlineStaff: onlineSavingExp,
-              offlineStaff: offlineSavingExp
-            }
-            this.setSavingTimes(savingTimes)
             const { reqTable, attachedFiles } = res.data
             const { reqName, stage, customer, device, tester, equipment, system, purpose, plant } = reqTable
             const reqTableData = { reqName, stage, customer, device, tester, equipment, system, purpose }
@@ -274,13 +254,12 @@ export const useNewReqStore = defineStore('newRequest', {
     async checkEmpty(isReviewing) {
       const warningString = 'Please fill in this field'
       const requestType = this.application.type
-      const benefitType = this.application.benefit.type
       
       for await (const [outerKey, outerValue] of Object.entries(this.validate)) {
         // console.log(`現在在遍歷 ${outerKey} 的物件`)
         for await (const [innerKey] of Object.entries(outerValue)) {
           //target 表示在這個迴圈中要被檢查的對象
-          const needSkip = skipSpecific(outerKey, innerKey, requestType, benefitType, isReviewing)
+          const needSkip = skipSpecific(outerKey, innerKey, requestType, isReviewing)
           // console.log(innerKey, '是否可以略過不檢查?', needSkip, this.validate[outerKey][innerKey])
           if (!needSkip) {
             let target = await getTarget(outerKey, innerKey, this.application)
@@ -353,12 +332,6 @@ const getTarget = async (outerKey, innerKey, targetResource) => {
       target = targetResource[outerKey][innerKey]
       break
     }
-    //在 this.application 中 savingTimes 的 value 是三個 number, 加總起來為 0 則表示未填寫
-    case 'savingTimes': {
-      const savingTimes = Object.values(targetResource[outerKey][innerKey])
-      target = savingTimes[0] + savingTimes[1] + savingTimes[2]
-      break
-    }
     //其他 key 在 this.application 中則都只是 string
     default: {
       target = targetResource[outerKey][innerKey]
@@ -373,30 +346,19 @@ const getTarget = async (outerKey, innerKey, targetResource) => {
  * @param { string } outerKey
  * @param { string } innerKey
  * @param { string } requestType
- * @param { string } benefitType
  * @param { boolean } isReviewing: 此時 status 是否為 'Reviewing'
  * @returns { boolean } 可以略過不檢查則返回 true, 必須檢查時則返回 false
  */
-const skipSpecific = (outerKey, innerKey, requestType, benefitType, isReviewing) => {
+const skipSpecific = (outerKey, innerKey, requestType, isReviewing) => {
   let needSkip = false
   if (!isReviewing) {
     //案例 1: status 不為 'Reviewing' 時, 不需要檢查 schedule
-    if (outerKey === 'schedule') {
-      needSkip = true
-    } else if (outerKey === 'benefit') {
-      if (benefitType === 'Efficiency' && innerKey === 'qualityIssue') {
-        //案例 2: 當 benefit 類型為 "Efficiency" 時, 不需要輸入 qualityIssue
-        needSkip = true
-      } else if (benefitType === 'Quality' && innerKey === 'savingTimes') {
-        //案例 3: 當 benefit 類型為 "Quality" 時, savingTimes 都是選填
-        needSkip = true
-      }
-    }
+    if (outerKey === 'schedule') needSkip = true
   } else {
     needSkip = true
     if (outerKey === 'schedule') {
       needSkip = false
-      //案例 4: status 為 'Reviewing' 時, 需要檢查
+      //案例 2: status 為 'Reviewing' 時, 需要檢查
       //當需求類型為 "OneTime" 時, 不需要輸入 release 及 monitor 1 lot 日期
       if (innerKey === 'release' || innerKey === 'monitor') {
         needSkip = requestType === 'OneTime' ? true : false

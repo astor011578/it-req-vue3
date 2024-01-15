@@ -73,14 +73,6 @@ export const approveEvidence = (reqNo, data) => {
   })
 }
 
-export const updateBenefit = (reqNo, data) => {
-  return request({
-    method: 'patch',
-    url: `request/actual-benefit/${reqNo}`,
-    data
-  })
-}
-
 export const applyCancellation = (reqNo, data) => {
   return request({
     method: 'patch',

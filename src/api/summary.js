@@ -8,13 +8,6 @@ export const getITReqSummary = () => {
   })
 }
 
-export const getBenefitSummary = () => {
-  return request({
-    method: 'get',
-    url: `/summary/benefits/${getTimestamp()}`
-  })
-}
-
 export const getAllViews = () => {
   return request({
     method: 'get',

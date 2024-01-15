@@ -27,34 +27,24 @@ const props = defineProps({
 })
 
 const today = dateGenerator()
-const filename = ref(`IT Request_${today}_weekly`)
-const sheetname = ref('Control table')
+const fileName = ref(`IT Request_${today}_weekly`)
+const sheetName = ref('Control table')
 const resource = ref([])  //從服務端取出的資料
 const data = ref([])      //二維陣列
 const redCells = ref([])  //二維陣列
 const cols = ref([
   //cols 裡的每個 item 皆為一維陣列
   [
-    'IT #', 'Request name', 'Status', 'Approve date', 'Review duration (day)', 'Lead time (day)',
-    'Rescheduling (times)', '',
-    'Type', 'Benefit',
-    'Save tester time (hr / day)', '',
-    'Save online staff time (hr / day)', '',
-    'Save offline staff time (hr / day)', '',
-    'Plant', 'Requester', 'IT', 'Issue date', 'Turn on',
+    'IT #', 'Request name', 'Status', 'Approve date', 'Review duration (day)', 'Lead time (day)', 'Rescheduling (times)', '',
+    'Type', 'Plant', 'Requester', 'IT', 'Issue date', 'Turn on',
     'IT buyoff (UAT1)', '',
     'User buyoff (UAT2)', '',
     'Release', '',
     'Monitor 1 lot', ''
   ],
   [
+    '', '', '', '', '', '', 'IT', 'Requester',
     '', '', '', '', '', '',
-    'IT', 'Requester',
-    '', '',
-    'Expect', 'Actual',
-    'Expect', 'Actual',
-    'Expect', 'Actual',
-    '', '', '', '', '',
     'Expect', 'Actual',
     'Expect', 'Actual',
     'Expect', 'Actual',
@@ -74,19 +64,15 @@ const transferData = async ($resource) => {
 
   $resource.forEach(doc => {
     let {
-      reqNo, reqName, buyoffStatus, approveDate, reviewDuration, leadTime, rescheduleIT, rescheduleReqr, type,
-      benefitType, testerSavingExp, testerSavingAct, onlineSavingExp, onlineSavingAct, 
-      offlineSavingExp, offlineSavingAct, plant, reqr, pgr, issueDate, turnOnDate,
-      UAT1Exp, UAT1Act, UAT2Exp, UAT2Act, releaseExp, releaseAct, monitorExp, monitorAct
+      reqNo, reqName, buyoffStatus, approveDate, reviewDuration, leadTime, rescheduleIT, rescheduleReqr, type, plant, reqr, pgr,
+      issueDate, turnOnDate, UAT1Exp, UAT1Act, UAT2Exp, UAT2Act, releaseExp, releaseAct, monitorExp, monitorAct
     } = doc
     leadTime = leadTime < 0 ? 'NA' : leadTime
     type = type ? type : 'NA'
 
     data.push([
-      reqNo, reqName, buyoffStatus, approveDate, reviewDuration, leadTime, rescheduleIT, rescheduleReqr, type,
-      benefitType, testerSavingExp, testerSavingAct, onlineSavingExp, onlineSavingAct,
-      offlineSavingExp, offlineSavingAct, plant, reqr, pgr, issueDate, turnOnDate,
-      UAT1Exp, UAT1Act, UAT2Exp, UAT2Act, releaseExp, releaseAct, monitorExp, monitorAct
+      reqNo, reqName, buyoffStatus, approveDate, reviewDuration, leadTime, rescheduleIT, rescheduleReqr, type, plant, reqr, pgr,
+      issueDate, turnOnDate, UAT1Exp, UAT1Act, UAT2Exp, UAT2Act, releaseExp, releaseAct, monitorExp, monitorAct
     ])
   })
 
@@ -122,30 +108,30 @@ const getRedCells = async ($resource) => {
 watch(props, async () => {
   if (props.resource) {
     resource.value = Object.assign([], props.resource)
-    data.value = await transferData(resource.value)
-    redCells.value = await getRedCells(resource.value)
+    data.value = transferData(resource.value)
+    redCells.value = getRedCells(resource.value)
   }
   if (props.title) {
-    filename.value = `IT Request_${today}_${props.title.toLowerCase()}`
-    sheetname.value = `${props.title} table`
+    fileName.value = `IT Request_${today}_${props.title.toLowerCase()}`
+    sheetName.value = `${props.title} table`
   }
 })
 
 /**
  * @description 繪製 .xlsx 檔中的工作頁 (worksheet)
  * @param { Object } $wb : 工作簿
- * @param { String } $sheetname : 工作表名稱
+ * @param { String } $sheetName : 工作表名稱
  * @param { Array } $columns : 表頭名
  * @param { Array } $rawData : 原始資料
  * @param { Array } $data : 等待要 insert 的資料
  */
-const drawTable = async ($wb, $sheetname, $columns, $rawData, $data) => {
-  const ws = $wb.addWorksheet($sheetname) //工作頁 (分頁 sheet)
+const drawTable = async ($wb, $sheetName, $columns, $rawData, $data) => {
+  const ws = $wb.addWorksheet($sheetName) //工作頁 (分頁 sheet)
   const colLength = $columns[0].length    //有幾個欄位
   const headerRows = $columns.length      //表頭有幾行
 
   //樣式相關
-  const widths = ['', 11, 51, 17, 13, 15, 12, 11, 11, 10, 10, 14, 14, 16, 16, 16, 16, 8, 15, 15, 12, 9, 10, 10, 10, 10, 9, 9, 9, 9]
+  const widths = ['', 11, 51, 17, 13, 15, 12, 11, 11, 10, 8, 15, 15, 12, 9, 10, 10, 10, 10, 9, 9, 9, 9]
   const headerFont = { bold: true, size: 10, name: 'Arial' }
   const headerFill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFF00' } }
   const bodyFont = { size: 10, name: 'Arial' }
@@ -163,16 +149,16 @@ const drawTable = async ($wb, $sheetname, $columns, $rawData, $data) => {
 
   //插入資料至儲存格
   for (let i = 0; i < $data.length + headerRows; i++) {
-    if (i < headerRows) {
-      ws.addRow($columns[i])
-    } else {
-      ws.addRow($data[i - headerRows])
-    }
+    const data = i < headerRows ? $columns[i] : $data[i - headerRows]
+    ws.addRow(data)
   }
 
+  reqNo, reqName, buyoffStatus, approveDate, reviewDuration, leadTime, rescheduleIT, rescheduleReqr, type, plant, reqr, pgr,
+  issueDate, turnOnDate, UAT1Exp, UAT1Act, UAT2Exp, UAT2Act, releaseExp, releaseAct, monitorExp, monitorAct
+
   //處理合併儲存格
-  const rowSpans = ['A', 'B', 'C', 'D', 'E', 'F', 'I', 'J', 'Q', 'R', 'S', 'T', 'U'].map((item) => { return `${item}1:${item}2` })
-  const colSpans = ['G1:H1', 'K1:L1', 'M1:N1', 'O1:P1', 'V1:W1', 'X1:Y1', 'Z1:AA1', 'AB1:AC1']
+  const rowSpans = ['A', 'B', 'C', 'D', 'E', 'F', 'I', 'J', 'K', 'L', 'M', 'N'].map((item) => { return `${item}1:${item}2` })
+  const colSpans = ['G1:H1', 'O1:P1', 'Q1:R1', 'S1:T1', 'U1:V1']
   const mergeCells = rowSpans.concat(colSpans)
   mergeCells.forEach((mergeCell) => ws.mergeCells(mergeCell))
 
@@ -256,10 +242,10 @@ const drawTable = async ($wb, $sheetname, $columns, $rawData, $data) => {
 const exportXlsx = async () => {
   try {
     const workbook = new ExcelJS.Workbook()
-    await drawTable(workbook, sheetname.value, cols.value, resource.value, data.value)
+    await drawTable(workbook, sheetName.value, cols.value, resource.value, data.value)
     const buffer = await workbook.xlsx.writeBuffer()
     ElMessage.success(lang('Export successfully'))
-    return FileSaver(new Blob([buffer]), filename.value + '.xlsx')
+    return FileSaver(new Blob([buffer]), fileName.value + '.xlsx')
   } catch (err) {
     console.error(err)
     ElMessage.error(lang('Failed to export'))

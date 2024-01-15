@@ -44,10 +44,10 @@ const keyword = ref('')
  */
 const searchFields = ref([
   'reqNo', 'reqName', 'type', 'plant',
-  'reqr', 'pgr', 'benefitType', 'approveDate',
-  'issueDate', 'status', 'buyoffStatus', 'turnOn',
-  'UAT1Exp', 'UAT1Act', 'UAT2Exp', 'UAT2Act',
-  'releaseExp', 'releaseAct', 'monitorExp', 'monitorAct'
+  'reqr', 'pgr', 'approveDate', 'issueDate',
+  'status', 'buyoffStatus', 'turnOn', 'UAT1Exp',
+  'UAT1Act', 'UAT2Exp', 'UAT2Act', 'releaseExp',
+  'releaseAct', 'monitorExp', 'monitorAct'
 ])
 
 /**

@@ -79,18 +79,6 @@
           </template>
         </vxe-column>
         <vxe-column
-          field="benefitType"
-          :title="lang('Benefit')"
-          width="105"
-          sortable
-          :filters="benefitTypeList"
-          :filter-method="filterHandler"
-        />
-        <vxe-colgroup v-for="(item, index) in _benefits" :key="index" :title="`${lang(`Save ${item.title} time`)} (hr / day)`">
-          <vxe-column :field="`${item.prefix}Exp`" :title="lang('Expect')" width="85" />
-          <vxe-column :field="`${item.prefix}Act`" :title="lang('Actual')" width="85" />
-        </vxe-colgroup>
-        <vxe-column
           field="plant"
           :title="lang('Plant')"
           width="87"
@@ -149,11 +137,6 @@ const _schedule = [
   { title: 'Release', prefix: 'release' },
   { title: 'Monitor 1 lot', prefix: 'monitor' }
 ]
-const _benefits = [
-  { title: 'tester', prefix: 'testerSaving' },
-  { title: 'online staff', prefix: 'onlineSaving' },
-  { title: 'offline staff', prefix: 'offlineSaving' }
-]
 
 /**
  * @description 資料格的特殊標記
@@ -186,11 +169,6 @@ const highlightRow = ({ row }) => {
 const typeList = [
   { label: 'Project', value: 'Project' },
   { label: 'OneTime', value: 'OneTime' },
-  { label: 'Undefined', value: undefined }
-]
-const benefitTypeList = [
-  { label: 'Quality', value: 'Quality' },
-  { label: 'Efficiency', value: 'Efficiency' },
   { label: 'Undefined', value: undefined }
 ]
 const plantList = [

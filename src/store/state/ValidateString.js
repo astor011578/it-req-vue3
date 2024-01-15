@@ -6,10 +6,6 @@ class Validate {
     this.coreTeam = {
       pgr: ''
     }
-    this.benefit = {
-      qualityIssue: '',
-      savingTimes: ''
-    }
     this.reqTable = {
       reqName: '',
       stage: '',

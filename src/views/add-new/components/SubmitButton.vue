@@ -39,14 +39,6 @@ const iterateValidates = async () => {
             window.scrollTo({ top: 0, behavior: 'smooth' })
             break
           }
-          case 'qualityIssue': {
-            window.scrollTo({ top: 160, behavior: 'smooth' })
-            break
-          }
-          case 'savingTimes': {
-            window.scrollTo({ top: 160, behavior: 'smooth' })
-            break
-          }
           case 'reqName':
           case 'stage':
           case 'customer': {

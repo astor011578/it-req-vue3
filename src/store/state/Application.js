@@ -7,15 +7,6 @@ class Application {
       reqr: {},
       pgr: {}
     }
-    this.benefit = {
-      type: 'Efficiency',
-      qualityIssue: '',
-      savingTimes: {
-        tester: 0,
-        onlineStaff: 0,
-        offlineStaff: 0
-      }
-    }
     this.reqTable = {
       reqName: '',
       stage: '',

@@ -5,8 +5,6 @@
       <el-form label-width="150px">
         <!-- Core team members -->
         <CoreTeamBlock />
-        <!-- Define benefit -->
-        <BenefitBlock />
         <!-- Request table -->
         <ReqTableBlock />
       </el-form>
@@ -18,7 +16,7 @@
 
 <script setup>
 import { FullLoading } from '@/components'
-import { CoreTeamBlock, BenefitBlock, ReqTableBlock, SubmitButton } from './components'
+import { CoreTeamBlock, ReqTableBlock, SubmitButton } from './components'
 import { useNewReqStore } from '@/store/new-request'
 import { useUserStore } from '@/store/user'
 const router = useRouter()

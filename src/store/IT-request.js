@@ -15,7 +15,6 @@ export const useITReqStore = defineStore('ITRequest', {
       uploadStatus: {},
       step: '',
       basicInfo: {},
-      benefit: {},
       cancellation: {},
       scope: {},
       turnOnDate: {},
@@ -34,7 +33,6 @@ export const useITReqStore = defineStore('ITRequest', {
     getReqStatus: (state) => { return state.basicInfo.status },
     getUploadStatus: (state) => { return state.uploadStatus },
     getBasicInfo: (state) => { return state.basicInfo },
-    getBenefit: (state) => { return state?.benefit },
     getCancellation: (state) => { return state?.cancellation },
     getScope: (state) => { return state.scope },
     getTurnOnDate: (state) => { return state.turnOnDate },
@@ -122,9 +120,8 @@ export const useITReqStore = defineStore('ITRequest', {
           await getRequest(this.reqNo)
             .then((res) => {
               const {
-                reqNo, reqrName, reqrId, pgrName, pgrId, issueDate, status, reqTable, benefitType, benefit,
-                review, cancel, turnOnDate, type, uploadStatus, attachedFiles, leadTime, reviewDuration, UAT1Logs, UAT2Logs,
-                releaseLogs, monitorLogs
+                reqNo, reqrName, reqrId, pgrName, pgrId, issueDate, status, reqTable, review, cancel,
+                turnOnDate, type, uploadStatus, attachedFiles, leadTime, reviewDuration, UAT1Logs, UAT2Logs, releaseLogs, monitorLogs
               } = res.data
               const { reqName } = reqTable
 
@@ -136,13 +133,6 @@ export const useITReqStore = defineStore('ITRequest', {
               this.uploadStatus = uploadStatus
               //get values in basicInfo
               this.basicInfo = { reqNo, reqName, type, status, leadTime, pgrName, reqrName, issueDate, review, reviewDuration }
-              //get values in benefit
-              if (hasProperty(benefit)) {
-                this.benefit = Object.assign({
-                  reqType: type,
-                  benefitType
-                }, benefit)
-              }
               //get values in cancellation
               this.cancellation = cancel
               //get values in scope

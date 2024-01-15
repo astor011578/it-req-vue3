@@ -5,11 +5,9 @@
       <el-form label-width="150px">
         <!-- Core team members -->
         <CoreTeamBlock />
-        <!-- Define benefit -->
-        <BenefitBlock />
         <!-- Request table -->
         <ReqTableBlock />
-        <!-- Define type & schedule -->
+        <!-- Type & schedule -->
         <ScheduleBlock />
       </el-form>
       <!-- Submit button -->
@@ -20,7 +18,7 @@
 
 <script setup>
 import { FullLoading } from '@/components'
-import { CoreTeamBlock, BenefitBlock, ReqTableBlock, ScheduleBlock, SubmitButton } from './components'
+import { CoreTeamBlock, ReqTableBlock, ScheduleBlock, SubmitButton } from './components'
 import { useITReqStore } from '@/store/IT-request'
 import { useUserStore } from '@/store/user'
 const router = useRouter()

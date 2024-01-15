@@ -7,7 +7,6 @@
     <div v-if="!loading" class="ce-main-container">
       <el-collapse v-model="collapseKeys">
         <BasicInfo />
-        <Benefit />
         <Cancellation />
         <Scope />
         <Schedule v-if="!reviewingStatuses.includes(status)" />
@@ -21,7 +20,7 @@
 import { FullLoading } from '@/components'
 import { useITReqStore } from '@/store/IT-request'
 import { useRoute } from 'vue-router'
-import { TopButtons, BasicInfo, Benefit, Scope, Schedule, Evidence, Cancellation } from './components'
+import { TopButtons, BasicInfo, Scope, Schedule, Evidence, Cancellation } from './components'
 
 const reqNo = useRoute().params.reqNo
 const store = useITReqStore()

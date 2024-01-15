@@ -46,18 +46,6 @@
             </a>
           </div>
         </el-descriptions-item>
-        <el-descriptions-item
-          v-if="showBenefit && hasProperty(actualBenefit)"
-          :label="lang('Actual benefit')"
-        >
-          <ul id="actual-benefit-list">
-            <li v-for="(item, key) in actualBenefit" :key="key">
-              <span class="mr-2">{{ lang(item.title) }}:</span>
-              <span class="mr-2">{{ item.value }}</span>
-              <span>(hr / day)</span>
-            </li>
-          </ul>
-        </el-descriptions-item>
       </el-descriptions>
       <!-- Submit button (Reject / Approve) -->
       <div class="ce-dialog-footer-btn">
@@ -100,9 +88,7 @@ const prePath = `${import.meta.env.VITE_APP_BASE_URL}/uploads/${reqNo}`
 const evidence = ref({})
 const reqData = ref({})
 const loading = ref(false)
-const showBenefit = ref(false)    //是否要顯示 benefit (最後一個步驟才需要)
 const showDialog = ref(false)     //save state of dialog
-const actualBenefit = ref({})
 
 const approve = async () => {
   reqData.value.reviewerReply.result = 'Approved'
@@ -151,8 +137,6 @@ watch(store, async () => {
   permission.value = await store.value.getPermission.approve
   step.value = await store.value.getSimpleStep
   const _evidence = await store.value.getEvidence
-  const _benefit = await store.value.getBenefit
-  const { reqType, offlineSavingAct, onlineSavingAct, testerSavingAct } = _benefit
   const reviewDate = new Date()
 
   if (step.value.length && hasProperty(_evidence)) {
@@ -169,27 +153,9 @@ watch(store, async () => {
         reviewerReply: { reviewDate }
       }
   
-      //取得需求類型
-      const requestType = reqType
-  
-      //是否要顯示有關 benefit 的欄位
-      if (requestType === 'OneTime') {
-        showBenefit.value = step.value === 'UAT2' ? true : false
-      } else if (requestType === 'Project') {
-        showBenefit.value = step.value === 'monitor' ? true : false
-      }
-  
-      //取得實際效益 (actual benefit) 的值
-      actualBenefit.value = {
-        tester: { title: 'Save tester time', value: testerSavingAct },
-        online: { title: 'Save online staff time', value: onlineSavingAct },
-        offline: { title: 'Save offline staff time', value: offlineSavingAct }
-      }
-      
       //for debugging
       // console.log('現在步驟是', step.value)
       // console.log('現在是否有 approve 的權限? ', permission.value)
-      // console.log('Dialog 是否會顯示 Benefit 欄位?', showBenefit.value)
     }
   }
 })
@@ -204,10 +170,5 @@ a {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-#actual-benefit-list {
-  list-style-type: none;
-  padding-left: 0;
 }
 </style>

@@ -46,7 +46,8 @@ const setting = {
    * vite.config.js base config
    * such as './'
    */
-  viteBasePath: './'
+  // viteBasePath: './'
+  viteBasePath: '/it-req-vue3/'     //to deploy to GitHub Pages
 }
 
 export default setting

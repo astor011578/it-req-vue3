@@ -9,7 +9,8 @@
     "build:test": "vite build --mode  build-test",
     "build": "vite build --mode build",
     "preview:build": "npm run build && vite preview",
-    "preview": "vite preview ",
+    "preview": "vite preview",
+    "deploy": "gh-pages -d dist",
     "lint": "eslint --ext .js,.jsx,.vue,.ts,.tsx src --fix",
     "test:unit": "vue-cli-service test:unit",
     "test:watchAll": "vue-cli-service test:unit --watchAll",
@@ -64,6 +65,7 @@
     "eslint-plugin-import": "2.25.3",
     "eslint-plugin-prettier": "4.0.0",
     "eslint-plugin-vue": "8.1.1",
+    "gh-pages": "^6.1.1",
     "jsdom": "16.4.0",
     "majestic": "1.8.1",
     "mockjs": "1.1.0",
@@ -113,8 +115,5 @@
     "> 1%",
     "not ie 11",
     "not op_mini all"
-  ],
-  "engines": {
-    "node": ">= 16 <18"
-  }
+  ]
 }

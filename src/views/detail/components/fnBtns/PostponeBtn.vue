@@ -141,7 +141,6 @@ const reschedule = async () => {
       setTimeout(async () => {
         await rescheduleRequest(reqNo, requestData)
           .then((res) => {
-            console.log(res)
             loading.value = false
             switch (res.code) {
               case 200: {

@@ -13,8 +13,8 @@ const general = {
   'Review new request': '簽閱新需求',
   'Edit IT-request': '編輯需求內容',
   /* placeholder & tips */
-  'Please input user ID': '請輸入全球工號',
-  'Please input password': '請輸入密碼',
+  'User ID (Test account: 999999)': '全球工號 (測試用帳號: 999999)',
+  'Password (Test password: 999999)': '密碼 (測試用密碼: 999999)',
   'User ID or password is incorrect': '工號或密碼不正確',
   'Loading': '讀取中',
   'Now loading': '讀取中',

@@ -17,6 +17,7 @@ onMounted(() => {
 })
 watch(props, (value) => { if (!props.loading) loadingInstance.value.close() })
 </script>
+
 <style lang="scss" scoped>
 span {
   display: flex;

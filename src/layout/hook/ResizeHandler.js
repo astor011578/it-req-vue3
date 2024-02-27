@@ -13,7 +13,6 @@ export default function () {
     if (!document.hidden) {
       const isMobile = $_isMobile()
       if (isMobile) {
-        //console.log('closeSideBar')
         //此處只做根據 window 尺寸來關閉 sidebar 功能
         appStore.M_sidebar_opened(false)
       } else {

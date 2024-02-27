@@ -33,6 +33,7 @@ const props = defineProps({
 watch(props, (newVal, oldVal) => exportXlsx.value = props.onExport)
 onMounted(() => exportXlsx.value = props.onExport)
 </script>
+
 <style lang="scss" scoped>
 .export-xlsx-container {
   display: inline-block;

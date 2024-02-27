@@ -11,7 +11,6 @@
 <script setup>
 import { ChevronUp } from '@/icons/common/'
 window.onresize = () => {
-  // console.log('resize')
   getHasScrollY()
   isHidden.value = hasScrollY.value ? false : true
 }
@@ -43,11 +42,11 @@ const getHasScrollY = () => {
   clientHeight.value = rootDOM.clientHeight
   hasScrollY.value = scrollHeight.value > clientHeight.value ? true : false
   if (hasScrollY.value) isHidden.value = false
-  // console.log(`是否有滾軸: ${hasScrollY.value}`, `是否隱藏按鈕: ${isHidden.value}`, scrollHeight.value, clientHeight.value)
 }
 
 onMounted(() => setTimeout(() => getHasScrollY(), 1000))
 </script>
+
 <style lang="scss">
 #toBottom {
   right: 35px;

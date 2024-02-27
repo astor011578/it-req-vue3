@@ -11,8 +11,9 @@
           <div class="rowSC">
             <User class="icon-container" />
             <el-input
+              class="test"
               v-model="loginForm.userId"
-              :placeholder="lang('Please input user ID')"
+              :placeholder="lang('User ID (Test account: 999999)')"
               @keyup="clearTipMsg"
             />
           </div>
@@ -25,7 +26,7 @@
               ref="pwdRef"
               v-model="loginForm.password"
               :type="pwdType"
-              :placeholder="lang('Please input password')"
+              :placeholder="lang('Password (Test password: 999999)')"
               @keyup="clearTipMsg"
               @keyup.enter="loginHandler"
             />
@@ -126,12 +127,17 @@ const showPwd = () => {
   nextTick(() => pwdRef.value.focus())
 }
 </script>
+
 <style lang="scss" scoped>
 $bg-gradient: linear-gradient(180deg, rgb(237, 235, 253) 0%, rgb(209, 209, 239) 100%);
 $title: #616161;
 $error: var(--error);
 $gray: #757575;
 $lightgray: #e0e0e0;
+
+:deep(.el-form-item__content) {
+  display: block;
+}
 
 .login-container {
   height: 100vh;

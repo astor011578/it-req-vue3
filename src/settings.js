@@ -46,7 +46,7 @@ const setting = {
    * vite.config.js base config
    * such as './'
    */
-  // viteBasePath: './'
+  // viteBasePath: './'             //for development environment
   viteBasePath: '/it-req-vue3/'     //to deploy to GitHub Pages
 }
 

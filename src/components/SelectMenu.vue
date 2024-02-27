@@ -40,6 +40,7 @@ onMounted(() => {
   selected.value = props.selected
 })
 </script>
+
 <style scoped lang="scss">
 :deep(.el-select) {
   width: 100%;

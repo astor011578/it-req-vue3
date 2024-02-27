@@ -9,10 +9,11 @@
 <script setup>
 import { ChevronUp } from '@/icons/common/'
 // for debugging
-window.addEventListener('scroll', () => {
-  // console.log(`目前滾輪高度: ${window.scrollY}`)
-})
+// window.addEventListener('scroll', () => {
+//   console.log(`目前滾輪高度: ${window.scrollY}`)
+// })
 </script>
+
 <style lang="scss">
 div:has(#backTop) {
   background-color: transparent;

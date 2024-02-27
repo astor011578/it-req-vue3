@@ -35,6 +35,7 @@ const classObj = computed(() => {
 //listening the window size to open or close the left sidebar
 ResizeHook()
 </script>
+
 <style lang="scss" scoped>
 $sidebar-close-width: 54px;
 .main-container {

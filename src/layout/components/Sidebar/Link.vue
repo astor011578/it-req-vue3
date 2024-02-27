@@ -38,7 +38,3 @@ const state = reactive({
   levelList: null
 })
 </script>
-
-<style scoped lang="scss">
-
-</style>

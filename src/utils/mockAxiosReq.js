@@ -33,7 +33,7 @@ service.interceptors.response.use(
   (response) => {
     const res = response.data
 
-    // if the custom code is not 20000, it is judged as an error.
+    // if the custom code is not 20000, it is judged as an error
     if (res.code !== 20000) {
       ElMessage({
         message: res.ElMessage || 'Error',
@@ -46,7 +46,7 @@ service.interceptors.response.use(
     }
   },
   (error) => {
-    console.log('err' + error) // for debug
+    console.log('err' + error)    //for debug
     ElMessage({
       message: error.ElMessage,
       type: 'error',

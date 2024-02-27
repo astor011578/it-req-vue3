@@ -9,14 +9,6 @@
   </div>
 </template>
 
-<script setup>
-// import { useAppStore } from '@/store/app'
-// const appStore = useAppStore()
-// const isSidebarOpened = computed(() => {
-//   console.log('is opened?', appStore.sidebar.opened)
-//   return appStore.sidebar.opened
-// })
-</script>
 <style scoped lang="scss">
 #top-title {
   top: var(--navbar-height);

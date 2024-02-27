@@ -78,7 +78,6 @@ watch(loadAll, (newVal, oldVal) => {
       case false: initChart(barChart, filterData); break;
     }
   }, 1500)
-  console.log(barChart.getOption())
 })
 
 /**

@@ -5,7 +5,6 @@ import pack from '../../package.json'
 import { jsErrorCollection } from 'js-error-collection'
 
 const errorLogReq = (errLog) => {
-  console.log(errLog)
   request({
     url: '/errors/insert',
     data: {
@@ -23,12 +22,12 @@ const errorLogReq = (errLog) => {
 }
 
 export default function () {
-  /*
+  /**
    * type judge
    * base type  using 'type of'
    * Reference type using 'instance of'
    * recommend to reading https://www.jianshu.com/p/ddc7f189d130
-   * */
+   */
   const checkNeed = () => {
     const env = import.meta.env.VITE_APP_ENV
     const { errorLog } = setting

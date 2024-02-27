@@ -94,6 +94,7 @@ watch(
   { immediate: true }
 )
 </script>
+
 <style scoped lang="scss">
 $sidebar-close-width: 54px;
 

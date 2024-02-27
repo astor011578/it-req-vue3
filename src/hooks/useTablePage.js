@@ -4,7 +4,7 @@ export default function (selectPageReq) {
   const pageSize = ref(10)
 
   /**
-   * 換頁時呼叫此handler
+   * 換頁時呼叫此 handler
    * @param { Number } val 第幾頁
    */
   const handleCurrentChange = (val) => {

@@ -7,7 +7,7 @@
     <template #default>
       {{ lang('You can download') }}
       <a
-        href="/application/template.xlsx"
+        :href="templatePath"
         class="ce-link"
         download="it-req-template"
       >
@@ -21,4 +21,9 @@
 
 <script setup>
 import { lang } from '@/hooks/useCommon'
+import settings from '@/settings'
+const envPath = settings.viteBasePath
+const isDevPath = envPath === './'
+const basePath = '/application/template.xlsx'
+const templatePath = isDevPath ? basePath : `/it-req-vue3${basePath}`
 </script>

@@ -1,0 +1,1 @@
+import{_ as e,c as r,d as o}from"./index-51968b70.js";const t=e({beforeRouteEnter(e,r,o){o((e=>{e.$router.replace(r.path)}))}},[["render",function(e,t,a,s,i,n){return r(),o("div")}],["__file","C:/Program Files/Workspace/it-req-fe/src/views/reload/index.vue"]]);export{t as default};

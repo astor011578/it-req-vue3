@@ -42,8 +42,8 @@ import directive from '@/directives'
 directive(app)
 
 //error log collection
-import errorLog from '@/hooks/useErrorLog'
-errorLog()
+// import errorLog from '@/hooks/useErrorLog'
+// errorLog()
 
 //import router
 import router from './router'
